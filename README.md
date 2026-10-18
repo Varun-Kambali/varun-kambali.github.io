@@ -2,14 +2,16 @@
 
 Portfolio site for Varun Kambali, AI Engineer in Bengaluru: **https://varun-kambali.github.io**
 
-It is an **evidence map**. Pick a skill and the resume lines and projects that back it light up; pick a line and its skills light up. The IDs (`E3`, `K2`, `P1`) match the resume. A project board reads each open-source project's repo, demo and headline eval result from GitHub when the page loads, so a project appears on the site as soon as it ships.
+It is an **evidence map**. Pick a skill and the resume lines and projects that back it light up; pick a line and its skills light up; pick what you're hiring for (RAG, agents, evals, search, data and cloud) or a step in the career timeline, and the matching work lights up. The IDs (`E3`, `K2`, `P1`) match the resume. A project board reads each open-source project's repo, demo and headline eval result from GitHub when the page loads, so a project appears on the site as soon as it ships.
 
 Plain HTML, CSS and JavaScript: no framework, no build step, hosted on GitHub Pages.
 
 ## How it works
 - **The HTML is the data.** Skills are `<li data-skill="rag">` items in the skills panel. Each evidence card is an `<article data-evidence data-kind="line|project">` that lists its skills as `<li data-tag="rag">`. Without JavaScript the page reads as a plain resume; `assets/js/evidence-map.js` turns those lists into toggle buttons and draws the connectors.
 - **Skills no single resume line names** (for example LangGraph, listed in the resume's skills row K2) carry `data-listed="K2"`, and the map says so instead of inventing a link.
-- **Deep links:** `?skill=rag` or `?line=E3` opens the map with that selection. `?theme=dark` or `?theme=light` forces a theme.
+- **Hiring lenses** are `<li data-lens="rag" data-skills="rag citations …">` in the explore bar; **career steps** are `<li data-role-filter="role-searce">` pointing at a role section. `check_site.py` fails if a lens names an unknown skill or a step points at a missing role.
+- **Deep links:** `?skill=rag`, `?line=E3`, `?lens=agents` or `?role=role-searce` opens the map with that selection, and "Copy link" shares the current view. `?theme=dark` or `?theme=light` forces a theme.
+- **Now building:** the strip under the hero names the project in progress (or the next one). The sync writes it; the page adds the latest commit once the repo is public.
 - **Projects keep themselves current.** `data/projects.json` lists the projects. A daily Action (`.github/workflows/sync.yml`) runs `scripts/sync.mjs`, which reads each project's repo and rewrites the project cards between the `<!-- sync:… -->` markers in `index.html`. It opens a PR and merges it only when something changed, after `check_site.py` and the tests pass. The profile README (`Varun-Kambali/Varun-Kambali`) runs the same script on its own projects table.
   - A project repo can carry a **`portfolio.json`** (`title`, `tagline`, `summary`, `measures`, `skills`, `status`, `evalRow`, `demo`) to update its own card without touching this repo. A new public repo with the topic **`portfolio`** and a `portfolio.json` that has an `id` joins the board by itself.
   - A release `v1.0.0` or later marks a project **Shipped**. The headline eval is the first data row of its `evals/results/summary.md`.

@@ -205,10 +205,19 @@ export function skillLabels(html) {
   return labels;
 }
 
+// The strip under the hero: the project in progress, or else the next one.
+function nowStrip(projects) {
+  const p = projects.find((x) => x.status === "progress") || projects.find((x) => x.status === "next");
+  if (!p) return "";
+  const label = p.status === "progress" ? "Now building" : "Up next";
+  return `      <p class="now" data-now data-repo="${esc(p.repo)}"><span class="now__label">${label}</span> <a class="now__project" href="#${p.id}"><span class="id-chip">${p.id}</span> ${esc(p.title)}</a> <span class="now__commit" data-now-commit></span></p>`;
+}
+
 export function renderSite(html, projects, owner, today, warn = () => {}) {
   const labels = skillLabels(html);
   let next = setSection(html, "map-projects", projects.map((p) => mapCard(p, labels, warn)).join("\n"));
   next = setSection(next, "board", projects.map((p) => boardCard(p, owner)).join("\n"));
+  if (next.includes("<!-- sync:now:start -->")) next = setSection(next, "now", nowStrip(projects));
   return stamp(html, next, today);
 }
 

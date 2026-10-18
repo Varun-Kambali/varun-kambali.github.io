@@ -20,7 +20,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
   <link rel="stylesheet" href="assets/css/tokens.css">
   <link rel="stylesheet" href="assets/css/site.css">
   <script src="assets/js/theme.js" defer></script>
@@ -47,38 +47,70 @@
 
   <main id="main">
     <section class="hero wrap" id="top" aria-labelledby="name">
-      <p class="eyebrow">Engineer report · updated October 2026</p>
-      <h1 id="name">Varun Kambali</h1>
-      <p class="hero__headline">AI Engineer · Production RAG, AI Agents &amp; LLM Evaluation</p>
-      <p class="hero__summary"><span class="id-chip" title="Resume line S1">S1</span> AI Engineer with 3+ years shipping production LLM systems on Google Cloud (retrieval-augmented generation, agents, search) for enterprise clients in SaaS, legal and travel. Built an agentic NL2SQL engine at <span class="num">92%</span> execution accuracy across <span class="num">20</span> markets, a multi-tenant RAG platform with citation verification, and hybrid search over <span class="num">10M+</span> multimodal assets.</p>
+      <div class="hero__grid">
+        <div class="hero__intro">
+          <p class="eyebrow">AI Engineer · Bengaluru</p>
+          <h1 id="name" class="hero__name">Varun Kambali</h1>
+          <p class="hero__headline">I build LLM systems that hold up in production.</p>
+          <p class="hero__summary"><span class="id-chip" title="Resume line S1">S1</span> AI Engineer with 3+ years shipping production LLM systems on Google Cloud (retrieval-augmented generation, agents, search) for enterprise clients in SaaS, legal and travel. Built an agentic NL2SQL engine at <span class="num">92%</span> execution accuracy across <span class="num">20</span> markets, a multi-tenant RAG platform with citation verification, and hybrid search over <span class="num">10M+</span> multimodal assets.</p>
+          <ul class="link-row">
+            <li><a class="btn btn--primary" href="#evidence">See the evidence</a></li>
+            <li><a href="https://github.com/Varun-Kambali">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/varunkambali">LinkedIn</a></li>
+            <li><a href="mailto:kambalivarun@gmail.com">kambalivarun@gmail.com</a></li>
+          </ul>
+        </div>
 
-      <dl class="report-summary">
-        <div><dt>Role</dt><dd>Senior AI Engineer, Searce Inc (formerly Cloudside Technologies)</dd></div>
-        <div><dt>Experience</dt><dd><span class="num">3+</span> years, all in production ML and GenAI (Oct 2023 – present)</dd></div>
-        <div><dt>Domains</dt><dd>Enterprise clients in SaaS, legal and travel, on Google Cloud</dd></div>
-        <div><dt>Building now</dt><dd><a href="#P1">P1 Nutrition MCP server</a>, in public</dd></div>
-        <div><dt>Certified</dt><dd><a href="#credentials">Google Cloud PMLE and PDE, two Gemini Enterprise specialisations, Anthropic CCA-F</a></dd></div>
-        <div><dt>Based in</dt><dd>Bengaluru, India</dd></div>
-      </dl>
+        <dl class="report-summary">
+          <div><dt>Role</dt><dd>Senior AI Engineer, Searce Inc (formerly Cloudside Technologies)</dd></div>
+          <div><dt>Experience</dt><dd><span class="num">3+</span> years, all in production ML and GenAI (Oct 2023 – present)</dd></div>
+          <div><dt>Domains</dt><dd>Enterprise clients in SaaS, legal and travel, on Google Cloud</dd></div>
+          <div><dt>Certified</dt><dd><a href="#credentials">Google Cloud PMLE and PDE, two Gemini Enterprise specialisations, Anthropic CCA-F</a></dd></div>
+          <div><dt>Education</dt><dd>B.E. Computer Science, KSIT Bengaluru (2023)</dd></div>
+        </dl>
+      </div>
 
-      <ul class="link-row">
-        <li><a href="https://github.com/Varun-Kambali">GitHub</a></li>
-        <li><a href="https://www.linkedin.com/in/varunkambali">LinkedIn</a></li>
-        <li><a href="mailto:kambalivarun@gmail.com">kambalivarun@gmail.com</a></li>
-      </ul>
+      <!-- sync:now:start -->
+      <p class="now" data-now data-repo="nutrition-mcp"><span class="now__label">Now building</span> <a class="now__project" href="#P1"><span class="id-chip">P1</span> Nutrition MCP server</a> <span class="now__commit" data-now-commit></span></p>
+      <!-- sync:now:end -->
     </section>
 
     <section class="section wrap" id="evidence" aria-labelledby="evidence-title">
       <header class="section__head">
         <h2 id="evidence-title">Evidence map</h2>
-        <p class="section__lead">Pick a skill to see the resume lines and projects that back it. Pick a line to see the skills it used. The IDs match my resume. Client work is under NDA, so it is described at the same level of detail as the resume.</p>
+        <p class="section__lead">Every skill links to the work behind it. Pick a skill, a resume line, a role, or what you're hiring for. The IDs match my resume. Client work is under NDA, so it's described at resume level.</p>
       </header>
+
+      <div class="explore">
+        <div class="explore__row">
+          <p class="explore__label" id="lens-label">Hiring for</p>
+          <ul class="lens-list" aria-labelledby="lens-label">
+            <li data-lens="rag" data-skills="rag citations chunking vector-search">RAG</li>
+            <li data-lens="agents" data-skills="agents nl2sql mcp langgraph adk">Agents</li>
+            <li data-lens="evals" data-skills="judge benchmarking evalsets ci-evals observability langsmith">Evals</li>
+            <li data-lens="search" data-skills="hybrid vector-search pgvector embeddings">Search</li>
+            <li data-lens="data" data-skills="bigquery data-pipelines event-driven pubsub cloudfunctions cloudrun vertex vpipelines gemini-ent classical-ml">Data &amp; cloud</li>
+          </ul>
+        </div>
+        <div class="explore__row">
+          <p class="explore__label" id="timeline-label">Or walk my career</p>
+          <ol class="timeline" aria-labelledby="timeline-label">
+            <li data-role-filter="role-cloudside"><span class="timeline__date">Oct 2023</span> <span class="timeline__role">ML Engineer</span> <span class="timeline__note">Cloudside Technologies</span></li>
+            <li data-role-filter="role-cloudside-sr"><span class="timeline__date">Apr 2024</span> <span class="timeline__role">Senior ML Engineer</span> <span class="timeline__note">promoted after 6 months</span></li>
+            <li data-role-filter="role-searce"><span class="timeline__date">Apr 2026</span> <span class="timeline__role">Senior AI Engineer</span> <span class="timeline__note">Searce, which acquired Cloudside</span></li>
+            <li data-role-filter="role-projects"><span class="timeline__date">Now</span> <span class="timeline__role">Building in public</span> <span class="timeline__note">open-source projects</span></li>
+          </ol>
+        </div>
+      </div>
 
       <div class="map" data-map>
         <div class="map__skills" id="skills">
           <div class="map__status" data-map-status-bar>
-            <p class="map__status-text" data-map-status aria-live="polite">Select a skill or a resume line.</p>
-            <button type="button" class="btn btn--small" data-map-clear hidden>Clear</button>
+            <p class="map__status-text" data-map-status aria-live="polite">Select a skill, a resume line, a role or a lens.</p>
+            <span class="map__actions">
+              <button type="button" class="btn btn--small" data-map-copy hidden>Copy link</button>
+              <button type="button" class="btn btn--small" data-map-clear hidden>Clear</button>
+            </span>
           </div>
 
           <div class="skill-group">

@@ -1,26 +1,27 @@
-/* Design tokens. Source of truth: design-system/varun-kambali-portfolio/MASTER.md */
+/* Design tokens, v2 "warm report". Source of truth: design-system/varun-kambali-portfolio/MASTER.md */
 
 :root {
   color-scheme: light;
 
-  --color-bg: #F6F7F9;
-  --color-surface: #FFFFFF;
-  --color-surface-2: #EDF0F4;
-  --color-text: #111827;
-  --color-text-muted: #4A5361;
-  --color-border: #D4D9E0;
-  --color-border-strong: #7D8796;
-  --color-accent: #1F4ED8;
-  --color-accent-soft: #E3EAFE;
+  --color-bg: #FBF7F0;
+  --color-surface: #FFFDF9;
+  --color-surface-2: #F3ECE1;
+  --color-text: #1C1917;
+  --color-text-muted: #57534E;
+  --color-border: #E5DCCF;
+  --color-border-strong: #8A7F72;
+  --color-accent: #9A3412;
+  --color-accent-soft: #F7E3D7;
   --color-on-accent: #FFFFFF;
 
   --status-progress-fg: #8A4B08;
-  --status-progress-bg: #FDF1D8;
-  --status-ok-fg: #13612E;
-  --status-ok-bg: #DDF5E4;
-  --status-plan-fg: #3B4554;
-  --status-plan-bg: #E6E9EE;
+  --status-progress-bg: #FBEFD5;
+  --status-ok-fg: #14532D;
+  --status-ok-bg: #DCF2E3;
+  --status-plan-fg: #44403C;
+  --status-plan-bg: #ECE6DC;
 
+  --font-display: "Fraunces", Georgia, "Iowan Old Style", "Times New Roman", serif;
   --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
@@ -31,6 +32,7 @@
   --text-xl: 1.375rem;
   --text-2xl: 1.75rem;
   --text-3xl: 2.25rem;
+  --text-display: clamp(2rem, 1.35rem + 2.6vw, 3.25rem);
 
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -41,7 +43,8 @@
   --space-3xl: 4rem;
 
   --radius-sm: 4px;
-  --radius-md: 8px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
 
   --content-max: 70rem;
   --prose-max: 68ch;
@@ -57,44 +60,44 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --color-bg: #0E1116;
-    --color-surface: #151A21;
-    --color-surface-2: #1C232C;
-    --color-text: #E7EAEE;
-    --color-text-muted: #A4ADB9;
-    --color-border: #2C3440;
-    --color-border-strong: #6B7685;
-    --color-accent: #8AAEFF;
-    --color-accent-soft: #1B2A48;
-    --color-on-accent: #0E1116;
+    --color-bg: #17130F;
+    --color-surface: #211B16;
+    --color-surface-2: #2A231D;
+    --color-text: #F1EBE3;
+    --color-text-muted: #B5AB9F;
+    --color-border: #3A3129;
+    --color-border-strong: #7E7366;
+    --color-accent: #F4A47C;
+    --color-accent-soft: #3B2418;
+    --color-on-accent: #17130F;
     --status-progress-fg: #F4C873;
     --status-progress-bg: #33270F;
     --status-ok-fg: #8FE0A8;
-    --status-ok-bg: #122A1B;
-    --status-plan-fg: #C9D1DC;
-    --status-plan-bg: #252D38;
+    --status-ok-bg: #13291B;
+    --status-plan-fg: #D6CEC4;
+    --status-plan-bg: #2E2721;
   }
 }
 
 /* Dark theme picked with the toggle */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-bg: #0E1116;
-  --color-surface: #151A21;
-  --color-surface-2: #1C232C;
-  --color-text: #E7EAEE;
-  --color-text-muted: #A4ADB9;
-  --color-border: #2C3440;
-  --color-border-strong: #6B7685;
-  --color-accent: #8AAEFF;
-  --color-accent-soft: #1B2A48;
-  --color-on-accent: #0E1116;
+  --color-bg: #17130F;
+  --color-surface: #211B16;
+  --color-surface-2: #2A231D;
+  --color-text: #F1EBE3;
+  --color-text-muted: #B5AB9F;
+  --color-border: #3A3129;
+  --color-border-strong: #7E7366;
+  --color-accent: #F4A47C;
+  --color-accent-soft: #3B2418;
+  --color-on-accent: #17130F;
   --status-progress-fg: #F4C873;
   --status-progress-bg: #33270F;
   --status-ok-fg: #8FE0A8;
-  --status-ok-bg: #122A1B;
-  --status-plan-fg: #C9D1DC;
-  --status-plan-bg: #252D38;
+  --status-ok-bg: #13291B;
+  --status-plan-fg: #D6CEC4;
+  --status-plan-bg: #2E2721;
 }
 
 @media (prefers-reduced-motion: reduce) {

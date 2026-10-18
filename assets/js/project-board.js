@@ -105,6 +105,28 @@ async function fill(card) {
   return "ok";
 }
 
+function since(iso) {
+  const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+  if (Number.isNaN(days)) return "";
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  return days < 30 ? `${days} days ago` : formatDate(iso);
+}
+
+// The now-building strip: the latest commit on that project's default branch, once it's public.
+async function fillNow() {
+  const strip = document.querySelector("[data-now][data-repo]");
+  const slotEl = strip?.querySelector("[data-now-commit]");
+  if (!slotEl) return;
+  const result = await fetchCached(`https://api.github.com/repos/${OWNER}/${strip.dataset.repo}/commits?per_page=1`, "json");
+  const latest = result.ok && Array.isArray(result.body) ? result.body[0] : null;
+  if (!latest) return;
+  const message = latest.commit.message.split("\n")[0];
+  slotEl.textContent = `· latest commit ${since(latest.commit.committer.date)}: “${message}”`;
+}
+
+if (window.fetch) fillNow().catch(() => {});
+
 if (cards.length && window.fetch) {
   Promise.all(cards.map((card) => fill(card).catch(() => "error"))).then((results) => {
     if (!results.includes("error")) return;

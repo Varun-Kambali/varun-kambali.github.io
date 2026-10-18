@@ -1,7 +1,9 @@
 // Evidence map: links each skill to the resume lines and projects that use it.
-// The HTML is the data: skills are <li data-skill> in the skills panel, and each
-// evidence card lists its skills as <li data-tag>. Without JavaScript the page
-// still reads as a plain resume; this script only adds selection and connectors.
+// The HTML is the data: skills are <li data-skill> in the skills panel, each evidence
+// card lists its skills as <li data-tag>, a hiring lens is <li data-lens data-skills>,
+// and a career step is <li data-role-filter> pointing at a role section. Without
+// JavaScript the page still reads as a plain resume; this script adds selection,
+// connectors and shareable links (?skill=, ?line=, ?lens=, ?role=).
 (() => {
   "use strict";
 
@@ -10,45 +12,50 @@
 
   const statusText = map.querySelector("[data-map-status]");
   const clearButton = map.querySelector("[data-map-clear]");
+  const copyButton = map.querySelector("[data-map-copy]");
   const svg = map.querySelector("[data-connectors]");
   const wide = window.matchMedia("(min-width: 960px)");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const SVG_NS = "http://www.w3.org/2000/svg";
+  const IDLE = "Select a skill, a resume line, a role or a lens.";
 
   const chips = new Map(); // skill id -> button
   const labels = new Map(); // skill id -> label
   const listedIn = new Map(); // skill id -> resume skills row (K1..K5) when no line names it
   const cardsBySkill = new Map(); // skill id -> cards
   const skillsByCard = new Map(); // card -> skill ids
+  const lenses = new Map(); // lens id -> { button, label, skills }
+  const roles = new Map(); // role section id -> { button, label, section }
   const cards = [...map.querySelectorAll("[data-evidence]")];
-  const roles = [...map.querySelectorAll("[data-role-group]")];
+  const roleGroups = [...map.querySelectorAll("[data-role-group]")];
 
-  let state = null; // { type: "skill", id } | { type: "card", card }
+  let state = null; // { kind: "skill" | "card" | "lens" | "role", id }
   let drawn = false;
 
-  // Upgrade skill list items into toggle buttons.
-  for (const item of map.querySelectorAll(".map__skills [data-skill]")) {
-    const id = item.dataset.skill;
+  function toggleButton(item, className) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "skill";
-    button.dataset.skill = id;
+    if (className) button.className = className;
     button.setAttribute("aria-pressed", "false");
-    button.textContent = item.textContent.trim();
-    item.textContent = "";
-    item.removeAttribute("data-skill");
+    button.append(...item.childNodes);
     item.appendChild(button);
-    chips.set(id, button);
-    labels.set(id, button.textContent);
-    if (item.dataset.listed) listedIn.set(id, item.dataset.listed);
-    cardsBySkill.set(id, []);
-    button.addEventListener("click", () => {
-      if (state && state.type === "skill" && state.id === id) clear();
-      else selectSkill(id);
-    });
+    return button;
   }
 
-  // Index each card's skills and upgrade its tags and title into buttons.
+  // Skill chips.
+  for (const item of map.querySelectorAll(".map__skills [data-skill]")) {
+    const id = item.dataset.skill;
+    const button = toggleButton(item, "skill");
+    button.dataset.skill = id;
+    item.removeAttribute("data-skill");
+    chips.set(id, button);
+    labels.set(id, button.textContent.trim());
+    if (item.dataset.listed) listedIn.set(id, item.dataset.listed);
+    cardsBySkill.set(id, []);
+    button.addEventListener("click", () => toggle("skill", id));
+  }
+
+  // Cards: index their skills, turn tags into skill buttons and titles into line toggles.
   for (const card of cards) {
     const ids = [];
     for (const tag of card.querySelectorAll("[data-tag]")) {
@@ -67,29 +74,48 @@
       tag.textContent = "";
       tag.appendChild(button);
       button.addEventListener("click", () => {
-        selectSkill(id);
+        select("skill", id);
         if (!wide.matches) card.scrollIntoView({ block: "nearest", behavior: reducedMotion.matches ? "auto" : "smooth" });
       });
     }
     skillsByCard.set(card, ids);
-
     const title = card.querySelector(".card__title");
-    if (title) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.setAttribute("aria-pressed", "false");
-      button.textContent = title.textContent.trim();
-      title.textContent = "";
-      title.appendChild(button);
-      button.addEventListener("click", () => {
-        if (state && state.type === "card" && state.card === card) clear();
-        else selectCard(card);
-      });
-    }
+    if (title) toggleButton(title).addEventListener("click", () => toggle("card", card.id));
   }
 
-  function plural(n, one, many) {
-    return `${n} ${n === 1 ? one : many}`;
+  // Hiring lenses: named sets of skills.
+  for (const item of document.querySelectorAll("[data-lens]")) {
+    const skills = item.dataset.skills.split(/\s+/).filter((id) => chips.has(id));
+    const button = toggleButton(item, "lens");
+    lenses.set(item.dataset.lens, { button, label: button.textContent.trim(), skills });
+    button.addEventListener("click", () => toggle("lens", item.dataset.lens));
+  }
+
+  // Career steps: each points at a role section in the map.
+  for (const item of document.querySelectorAll("[data-role-filter]")) {
+    const id = item.dataset.roleFilter;
+    const section = map.querySelector(`[data-role-group][aria-labelledby="${id}"]`);
+    if (!section) continue;
+    const button = toggleButton(item, "timeline__step");
+    const role = item.querySelector(".timeline__role");
+    roles.set(id, { button, label: role ? role.textContent.trim() : id, section });
+    button.addEventListener("click", () => {
+      toggle("role", id);
+      // A role's cards can sit far below the timeline, so bring them into view.
+      if (state?.kind === "role") section.scrollIntoView({ block: "start", behavior: reducedMotion.matches ? "auto" : "smooth" });
+    });
+  }
+
+  const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  const kinds = { skill: "skill", card: "line", lens: "lens", role: "role" };
+
+  function counts(matches) {
+    const lines = matches.filter((c) => c.dataset.kind === "line").length;
+    const projects = matches.filter((c) => c.dataset.kind === "project").length;
+    const parts = [];
+    if (lines) parts.push(plural(lines, "resume line", "resume lines"));
+    if (projects) parts.push(plural(projects, "project", "projects"));
+    return parts.join(" and ") || "no linked evidence";
   }
 
   function resetClasses() {
@@ -97,88 +123,101 @@
       chip.setAttribute("aria-pressed", "false");
       chip.classList.remove("is-related", "is-dim");
     }
+    for (const { button } of [...lenses.values(), ...roles.values()]) button.setAttribute("aria-pressed", "false");
     for (const card of cards) {
       card.classList.remove("is-match", "is-dim", "is-selected");
       const titleButton = card.querySelector(".card__title button");
       if (titleButton) titleButton.setAttribute("aria-pressed", "false");
       for (const b of card.querySelectorAll(".tags button")) b.classList.remove("is-active");
     }
-    for (const role of roles) role.classList.remove("is-empty");
+    for (const group of roleGroups) group.classList.remove("is-empty");
     map.classList.remove("has-selection", "is-filtering");
   }
 
-  function selectSkill(id, { updateUrl = true } = {}) {
-    resetClasses();
-    state = { type: "skill", id };
-    drawn = false;
-    chips.get(id).setAttribute("aria-pressed", "true");
-
-    const matches = cardsBySkill.get(id);
+  function highlight(matches, related, filter) {
     for (const card of cards) {
       const isMatch = matches.includes(card);
       card.classList.toggle("is-match", isMatch);
       card.classList.toggle("is-dim", !isMatch);
-      for (const b of card.querySelectorAll(`.tags button[data-skill="${id}"]`)) b.classList.add("is-active");
     }
-    for (const role of roles) {
-      role.classList.toggle("is-empty", !role.querySelector("[data-evidence].is-match"));
+    if (related) {
+      for (const [id, chip] of chips) {
+        chip.classList.toggle("is-related", related.includes(id));
+        chip.classList.toggle("is-dim", !related.includes(id));
+      }
     }
-    map.classList.add("has-selection", "is-filtering");
+    if (filter) {
+      for (const group of roleGroups) group.classList.toggle("is-empty", !group.querySelector("[data-evidence].is-match"));
+      map.classList.add("is-filtering");
+    }
+    map.classList.add("has-selection");
+  }
 
-    const lines = matches.filter((c) => c.dataset.kind === "line").length;
-    const projects = matches.filter((c) => c.dataset.kind === "project").length;
-    const parts = [];
-    if (lines) parts.push(plural(lines, "resume line", "resume lines"));
-    if (projects) parts.push(plural(projects, "project in progress or planned", "projects in progress or planned"));
-    let text = `${labels.get(id)}: ${parts.join(", ") || "no linked evidence"}.`;
-    if (listedIn.has(id)) {
-      text += ` Listed in my resume's skills (${listedIn.get(id)}); no single resume line names it.`;
+  function select(kind, id, { updateUrl = true } = {}) {
+    resetClasses();
+    state = { kind, id };
+    drawn = false;
+    let text = "";
+
+    if (kind === "skill") {
+      const matches = cardsBySkill.get(id);
+      chips.get(id).setAttribute("aria-pressed", "true");
+      for (const card of matches) for (const b of card.querySelectorAll(`.tags button[data-skill="${id}"]`)) b.classList.add("is-active");
+      highlight(matches, null, true);
+      text = `${labels.get(id)}: ${counts(matches)}.`;
+      if (listedIn.has(id)) text += ` Listed in my resume's skills (${listedIn.get(id)}); no single resume line names it.`;
+    } else if (kind === "card") {
+      const card = cards.find((c) => c.id === id);
+      const ids = skillsByCard.get(card);
+      highlight([card], ids, false);
+      card.classList.add("is-selected");
+      card.querySelector(".card__title button")?.setAttribute("aria-pressed", "true");
+      const chipId = card.querySelector(".id-chip");
+      const name = `${chipId ? chipId.textContent + " " : ""}${card.querySelector(".card__title")?.textContent.trim() || id}`;
+      text = `${name} uses ${plural(ids.length, "skill", "skills")}: ${ids.map((i) => labels.get(i)).join(", ")}.`;
+    } else if (kind === "lens") {
+      const lens = lenses.get(id);
+      const matches = cards.filter((c) => skillsByCard.get(c).some((s) => lens.skills.includes(s)));
+      lens.button.setAttribute("aria-pressed", "true");
+      highlight(matches, lens.skills, true);
+      text = `Hiring for ${lens.label}: ${counts(matches)} match.`;
+    } else if (kind === "role") {
+      const role = roles.get(id);
+      const matches = cards.filter((c) => role.section.contains(c));
+      const related = [...new Set(matches.flatMap((c) => skillsByCard.get(c)))];
+      role.button.setAttribute("aria-pressed", "true");
+      highlight(matches, related, true);
+      text = `${role.label}: ${counts(matches)}, using ${plural(related.length, "skill", "skills")}.`;
     }
+
     announce(text);
-    if (updateUrl) setUrl("skill", id);
+    if (updateUrl) setUrl(kinds[kind], id);
     draw();
   }
 
-  function selectCard(card, { updateUrl = true } = {}) {
-    resetClasses();
-    state = { type: "card", card };
-    drawn = false;
-    const ids = skillsByCard.get(card);
-    for (const [id, chip] of chips) {
-      chip.classList.toggle("is-related", ids.includes(id));
-      chip.classList.toggle("is-dim", !ids.includes(id));
-    }
-    for (const other of cards) other.classList.toggle("is-dim", other !== card);
-    card.classList.add("is-match", "is-selected");
-    const titleButton = card.querySelector(".card__title button");
-    if (titleButton) titleButton.setAttribute("aria-pressed", "true");
-    map.classList.add("has-selection");
-
-    const chipId = card.querySelector(".id-chip");
-    const name = `${chipId ? chipId.textContent + " " : ""}${titleButton ? titleButton.textContent : card.id}`;
-    announce(`${name} uses ${plural(ids.length, "skill", "skills")}: ${ids.map((i) => labels.get(i)).join(", ")}.`);
-    if (updateUrl) setUrl("line", card.id);
-    draw();
+  function toggle(kind, id) {
+    if (state && state.kind === kind && state.id === id) clear();
+    else select(kind, id);
   }
 
   function clear({ updateUrl = true } = {}) {
     resetClasses();
     state = null;
     svg.replaceChildren();
-    announce("Select a skill or a resume line.");
+    announce(IDLE);
     if (updateUrl) setUrl(null);
   }
 
   function announce(text) {
     statusText.textContent = text;
     clearButton.hidden = state === null;
+    if (copyButton) copyButton.hidden = state === null || !navigator.clipboard;
   }
 
   function setUrl(key, value) {
     try {
       const url = new URL(window.location.href);
-      url.searchParams.delete("skill");
-      url.searchParams.delete("line");
+      for (const k of Object.values(kinds)) url.searchParams.delete(k);
       if (key) url.searchParams.set(key, value);
       history.replaceState(null, "", url);
     } catch (e) {
@@ -186,11 +225,12 @@
     }
   }
 
-  // Connectors: curves from the selected chip to its cards, or from the
-  // selected card to its chips. Wide screens only; purely decorative.
+  // Connectors: curves from the selected chip to its cards, or from the selected card
+  // to its chips. Wide screens only, and only for single skills or lines; lenses and
+  // roles light up many items at once, where lines would only add noise.
   function draw() {
     svg.replaceChildren();
-    if (!state || !wide.matches) return;
+    if (!state || !wide.matches || (state.kind !== "skill" && state.kind !== "card")) return;
     // The SVG covers only the gutter between the columns, so it never sits over
     // text (an overlay there would stop contrast checkers reading the background).
     const box = map.getBoundingClientRect();
@@ -201,11 +241,12 @@
     svg.style.width = `${Math.max(0, column.left - panel.right)}px`;
     const pairs = [];
 
-    if (state.type === "skill") {
+    if (state.kind === "skill") {
       const chip = chips.get(state.id);
       for (const card of cardsBySkill.get(state.id)) pairs.push([chip, card]);
     } else {
-      for (const id of skillsByCard.get(state.card)) pairs.push([chips.get(id), state.card]);
+      const card = cards.find((c) => c.id === state.id);
+      for (const id of skillsByCard.get(card)) pairs.push([chips.get(id), card]);
     }
 
     for (const [chip, card] of pairs) {
@@ -257,20 +298,33 @@
   clearButton.addEventListener("click", () => {
     const previous = state;
     clear();
-    if (previous && previous.type === "skill") chips.get(previous.id).focus();
+    if (previous?.kind === "skill") chips.get(previous.id).focus();
+    else if (previous?.kind === "lens") lenses.get(previous.id).button.focus();
+    else if (previous?.kind === "role") roles.get(previous.id).button.focus();
+  });
+
+  copyButton?.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      statusText.textContent = `${statusText.textContent} Link copied.`;
+    } catch (e) {
+      statusText.textContent = "Couldn't copy here; copy the address bar instead.";
+    }
   });
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && state) clear();
   });
 
-  // Deep links: ?skill=rag or ?line=E3
+  // Deep links: ?skill=rag, ?line=E3, ?lens=agents or ?role=role-searce
   const params = new URLSearchParams(window.location.search);
   const skill = params.get("skill");
   const line = params.get("line");
-  if (skill && chips.has(skill)) selectSkill(skill, { updateUrl: false });
-  else if (line) {
-    const card = cards.find((c) => c.id === line);
-    if (card) selectCard(card, { updateUrl: false });
-  }
+  const lens = params.get("lens");
+  const role = params.get("role");
+  if (skill && chips.has(skill)) select("skill", skill, { updateUrl: false });
+  else if (line && cards.some((c) => c.id === line)) select("card", line, { updateUrl: false });
+  else if (lens && lenses.has(lens)) select("lens", lens, { updateUrl: false });
+  else if (role && roles.has(role)) select("role", role, { updateUrl: false });
+  else announce(IDLE);
 })();
