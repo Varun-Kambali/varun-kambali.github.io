@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Evidence map and public-safety checks
+        run: python3 scripts/check_site.py
+
+      - name: Unit tests (eval summary parser)
+        run: node --test tests/
+
+      - name: HTML validation
+        run: npx --yes html-validate@11.16.4 "*.html"
+
+      - name: Accessibility, WCAG 2 AA (pa11y-ci with axe and HTML_CodeSniffer)
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 &
+          npx --yes pa11y-ci@5.0.0 --config .pa11yci.json
+
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

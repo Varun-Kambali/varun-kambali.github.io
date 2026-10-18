@@ -1,0 +1,22 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "runners": ["axe", "htmlcs"],
+    "timeout": 60000,
+    "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-setuid-sandbox"] }
+  },
+  "urls": [
+    "http://127.0.0.1:8765/?theme=light",
+    "http://127.0.0.1:8765/?theme=dark",
+    "http://127.0.0.1:8765/?theme=light&skill=bigquery",
+    "http://127.0.0.1:8765/?theme=dark&line=E3",
+    {
+      "url": "http://127.0.0.1:8765/?theme=light&skill=agents",
+      "viewport": { "width": 375, "height": 812, "isMobile": true }
+    },
+    {
+      "url": "http://127.0.0.1:8765/?theme=dark",
+      "viewport": { "width": 375, "height": 812, "isMobile": true }
+    }
+  ]
+}
