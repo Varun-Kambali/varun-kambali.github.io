@@ -1,0 +1,106 @@
+/* Design tokens. Source of truth: design-system/varun-kambali-portfolio/MASTER.md */
+
+:root {
+  color-scheme: light;
+
+  --color-bg: #F6F7F9;
+  --color-surface: #FFFFFF;
+  --color-surface-2: #EDF0F4;
+  --color-text: #111827;
+  --color-text-muted: #4A5361;
+  --color-border: #D4D9E0;
+  --color-border-strong: #7D8796;
+  --color-accent: #1F4ED8;
+  --color-accent-soft: #E3EAFE;
+  --color-on-accent: #FFFFFF;
+
+  --status-progress-fg: #8A4B08;
+  --status-progress-bg: #FDF1D8;
+  --status-ok-fg: #13612E;
+  --status-ok-bg: #DDF5E4;
+  --status-plan-fg: #3B4554;
+  --status-plan-bg: #E6E9EE;
+
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  --content-max: 70rem;
+  --prose-max: 68ch;
+
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --shadow-focus: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
+  --dim-opacity: 0.55;
+}
+
+/* Dark theme: follows the OS unless the visitor picked light */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0E1116;
+    --color-surface: #151A21;
+    --color-surface-2: #1C232C;
+    --color-text: #E7EAEE;
+    --color-text-muted: #A4ADB9;
+    --color-border: #2C3440;
+    --color-border-strong: #6B7685;
+    --color-accent: #8AAEFF;
+    --color-accent-soft: #1B2A48;
+    --color-on-accent: #0E1116;
+    --status-progress-fg: #F4C873;
+    --status-progress-bg: #33270F;
+    --status-ok-fg: #8FE0A8;
+    --status-ok-bg: #122A1B;
+    --status-plan-fg: #C9D1DC;
+    --status-plan-bg: #252D38;
+  }
+}
+
+/* Dark theme picked with the toggle */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0E1116;
+  --color-surface: #151A21;
+  --color-surface-2: #1C232C;
+  --color-text: #E7EAEE;
+  --color-text-muted: #A4ADB9;
+  --color-border: #2C3440;
+  --color-border-strong: #6B7685;
+  --color-accent: #8AAEFF;
+  --color-accent-soft: #1B2A48;
+  --color-on-accent: #0E1116;
+  --status-progress-fg: #F4C873;
+  --status-progress-bg: #33270F;
+  --status-ok-fg: #8FE0A8;
+  --status-ok-bg: #122A1B;
+  --status-plan-fg: #C9D1DC;
+  --status-plan-bg: #252D38;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}
