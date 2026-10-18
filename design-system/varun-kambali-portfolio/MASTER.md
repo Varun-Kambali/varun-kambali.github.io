@@ -6,165 +6,96 @@
 ---
 
 **Project:** Varun Kambali portfolio site
-**Written:** 2026-10-18. Base style: Swiss Modernism 2.0 (grid, rational spacing), with subtle motion and standard density.
-**Direction:** v2 (2026-10-18) is a "warm report": the evidence-map bones of v1, with warm paper tones, a display serif and a first-person voice. Where it departs from a stock Swiss palette, typeface or motion, the reason is given under each section.
+**Version:** v3, "annotated resume" (2026-10-18). It replaces v2 (warm paper, terracotta, display serif), which read as machine-made: cream with a rust accent and a big serif headline has become a stock look of generated sites.
 
 ---
 
-## Direction: an eval report, not a landing page
+## Direction: a resume someone has annotated
 
-The site reads like a clean engineering report about one engineer. Every claim carries an ID chip (`E3`, `K2`, `P1`) that matches the resume, numbers are set in monospace with tabular figures, and there is exactly one accent colour, used for links, selection and focus.
+The page reads like a printed resume that someone went over with a highlighter. A person's voice opens it, the work follows as dated lists, and the one memorable thing is the evidence map: pick a skill or a lens and the lines that prove it get marked.
 
-- **Calm and dense enough to scan.** Recruiters skim. Headings, IDs and numbers carry the page; body text stays short.
-- **Evidence over decoration.** No hero illustrations, gradients, glow, stock icons or skill-level bars. The only graphics are the evidence-map connectors and the pipeline stage strips, and both carry meaning.
-- **Honest states.** "In progress", "next", "planned" and "not run yet" look deliberate, not like errors.
+What the portfolios people admire have in common, and what this follows:
+- **A voice, not a tagline.** First person, specific, a little personal. The About text is Varun's own words.
+- **Restraint.** Text, lists, rules and whitespace. No cards, pills, badges or boxes inside boxes. A background appears only on hover.
+- **One typeface.** Hierarchy comes from size, weight and colour, not from mixing display fonts.
+- **A palette chosen for the person,** not the trend: ink on off-white, with a highlighter yellow as the single accent.
+- **One signature detail made with care,** instead of decoration everywhere.
 
 ## Color
 
-One accent. Neutral greys carry the structure. Status colours appear only in status pills, and each pill also has a dot shape and a text label, so colour is never the only signal.
-
-All text pairs below pass WCAG 2.2 AA (4.5:1 for text, 3:1 for UI boundaries), checked on 2026-10-18.
-
 | Role | Token | Light | Dark | Use |
 |---|---|---|---|---|
-| Page | `--color-bg` | `#FBF7F0` | `#17130F` | Page background (warm paper / warm near-black) |
-| Surface | `--color-surface` | `#FFFDF9` | `#211B16` | Cards, panels |
-| Surface 2 | `--color-surface-2` | `#F3ECE1` | `#2A231D` | Table headers, code, stage boxes |
-| Text | `--color-text` | `#1C1917` | `#F1EBE3` | Body and headings |
-| Muted text | `--color-text-muted` | `#57534E` | `#B5AB9F` | Meta lines, captions, dimmed items |
-| Border | `--color-border` | `#E5DCCF` | `#3A3129` | Dividers, card edges (decorative) |
-| Strong border | `--color-border-strong` | `#8A7F72` | `#7E7366` | Edges of controls such as chips and buttons (≥3:1) |
-| Accent (terracotta) | `--color-accent` | `#9A3412` | `#F4A47C` | Links, selected state, focus ring, connectors (6.8:1 / 9.2:1 on page) |
-| Accent soft | `--color-accent-soft` | `#F7E3D7` | `#3B2418` | Background of selected or highlighted items |
-| On accent | `--color-on-accent` | `#FFFFFF` | `#17130F` | Text on a solid accent fill |
-| In progress | `--status-progress-fg` / `-bg` | `#8A4B08` / `#FBEFD5` | `#F4C873` / `#33270F` | Pill: half dot, In progress |
-| Shipped | `--status-ok-fg` / `-bg` | `#14532D` / `#DCF2E3` | `#8FE0A8` / `#13291B` | Pill: filled dot, Shipped (green is reserved for this) |
-| Planned | `--status-plan-fg` / `-bg` | `#44403C` / `#ECE6DC` | `#D6CEC4` / `#2E2721` | Pill: ring, Next or Planned |
+| Page | `--color-bg` | `#FBFBFA` | `#111113` | Background: a neutral off-white, not cream |
+| Surface | `--color-surface` | `#FFFFFF` | `#18181B` | The fixed status bar on phones |
+| Surface 2 | `--color-surface-2` | `#F2F2F0` | `#202024` | Hover and selected entry background |
+| Text | `--color-text` | `#18181B` | `#F4F4F5` | Body, titles |
+| Muted text | `--color-text-muted` | `#52525B` | `#A1A1AA` | Descriptions, dates, meta (7.5:1 / 7.4:1) |
+| Border | `--color-border` | `#E4E4E7` | `#2E2E33` | Rules |
+| Strong border | `--color-border-strong` | `#8B8B94` | `#75757F` | Button edges, link underlines (≥3:1) |
+| Accent | `--color-accent` | `#18181B` | `#F4F4F5` | Focus rings: ink, not a colour |
+| Marker | `--color-marker` | `#FDE68A` | `#5B4A10` | The highlighter. The only accent colour |
+| Marker text | `--color-marker-text` | `#18181B` | `#FEF3C7` | Text on a full marker (14.2:1 / 7.8:1) |
+| Status | `--status-progress` / `-ok` / `-plan` | `#9A3412` / `#166534` / `#52525B` | `#FDBA74` / `#86EFAC` / `#A1A1AA` | Project status words |
 
-**Why terracotta on warm paper (v2):** v2 aims for a look that feels natural and personal. A warm palette (terracotta on cream, green kept for success) adds warmth without losing the single-accent discipline of v1, whose cool blue read as a dashboard. All pairs were rechecked against WCAG AA on 2026-10-18; none fail.
-
-**Theme:** light and dark both ship. The page follows `prefers-color-scheme` and a toggle overrides it (`data-theme="light|dark"` on `<html>`, remembered in `localStorage` when available).
+All pairs pass WCAG 2.2 AA, checked on 2026-10-18. Rule: muted text never sits on the marker (it fails in dark mode); anything marked switches to `--color-text` or `--color-marker-text`.
 
 ## Typography
 
-- **Display (h1, the headline, section headings):** Fraunces 500–600, optical size on. A warm, slightly soft serif: the human-warmth layer of a display serif + sans + mono stack.
-- **Sans (body, UI, card titles):** IBM Plex Sans 400, 500, 600.
-- **Mono (IDs, numbers, code, metrics):** IBM Plex Mono 400, 500.
-- **Why:** Plex was drawn for technical documentation, and its mono pairs exactly with the sans. Inter is fine but generic, and it has no matching mono.
-- **Loading:** Google Fonts with `display=swap` and `preconnect`. The system fallback stack keeps the layout stable if the fonts fail to load.
-
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-```
-
-| Token | Size / line height | Use |
-|---|---|---|
-| `--text-xs` | 12px / 1.4 | ID chips, pill labels |
-| `--text-sm` | 14px / 1.5 | Meta lines, skill chips, captions |
-| `--text-md` | 16px / 1.6 | Body (never smaller for paragraphs) |
-| `--text-lg` | 18px / 1.5 | Lead paragraph, card titles |
-| `--text-xl` | 22px / 1.3 | Section headings (h2) |
-| `--text-2xl` | 28px / 1.2 | Name (h1) on phones |
-| `--text-3xl` | 36px / 1.15 | Name (h1) on wide screens |
-| `--text-display` | 32–52px fluid / 1.1 | The first-person headline in the hero |
-
-Numbers use `font-variant-numeric: tabular-nums`. Line length stays at 60–75 characters (`max-width: 68ch` on prose).
-
-## Spacing, radius, elevation
-
-Spacing scale (standard density): `--space-xs` 4px, `--space-sm` 8px, `--space-md` 16px, `--space-lg` 24px, `--space-xl` 32px, `--space-2xl` 48px, `--space-3xl` 64px. Page gutter: 16px on phones, 32px from 768px.
-
-- **Radius:** `--radius-sm` 4px (ID chips, stage boxes), `--radius-md` 12px (cards, panels), `--radius-pill` (skill chips, lens buttons, the now-building strip). v2 rounds the interactive pieces so they feel friendly, while ID chips stay square as the "report" detail.
-- **Elevation:** borders, not shadows. `--shadow-focus` is the only shadow-like token. Cards do not lift on hover, because a lift on every card adds noise and shifts layout.
+- **IBM Plex Sans** 400, 500, 600 (and 400 italic) for everything readable. **IBM Plex Mono** only for dates and resume IDs (E1, K2, P1). Numbers inside sentences stay in the sans, weight 500.
+- Sizes: name 32px/600, role line 18px/500, body 16px/1.65, meta and lists 14px, tags and dates 12px. No display font, no italic serif headline, no all-caps labels above headings.
 
 ## Layout
 
-- Content width `--content-max` 1120px, centred.
-- **Evidence map:** from 960px, two columns: skills (about 1/3, sticky under the header) and evidence (about 2/3), with SVG connectors in the gutter between them. Below 960px, one column: skills as a wrapping chip list above the evidence, with no connectors, and a live count ("RAG: 2 resume lines, 1 project").
-- Breakpoints checked: 375, 768, 1024, 1440. No horizontal page scroll at any width; wide tables scroll inside their own container.
+- **Phones (below 1024px):** one column: name, role, one-line description, the evidence controls (lenses, status, a folded "All skills"), links, then About, Experience, Building in public, Credentials. The section nav is hidden (the sections follow directly).
+- **Desktop (1024px and up):** a sticky sidebar (about 21rem) and a scrolling resume column, 64px apart. The sidebar holds identity, the section nav, the evidence controls and the links; it scrolls on its own if it runs long.
+- **Experience** is a dated list: a mono date column (8.5rem) beside each role; the role's lines are entries under it.
 
 ## Components
 
-### ID chip
-Mono, `--text-xs`, 1px `--color-border-strong` edge, `--radius-sm`, padding 1px 6px. Text is the resume's line ID. When it is a link, it shows the accent and an underline on hover.
+### Highlighter
+- **Full mark** (pressed skill, pressed lens, a skill tag that matches): `--color-marker` background, `--color-marker-text`.
+- **Half mark** (matching entry titles, related skills, the current nav item, a pressed role): `box-shadow: inset 0 -0.45em 0 var(--color-marker)`, like a pen stroke across the lower part of the text. It's an inset shadow rather than a gradient so contrast checkers can still read the background.
+- **Dim** (not matching): titles turn muted; descriptions are already muted, and they brighten when an entry matches.
 
-### Skill chip (toggle button)
-`<button aria-pressed>` in the sans at `--text-sm`, 1px `--color-border-strong` edge, `--radius-sm`, min height 32px (44px on touch screens via `@media (pointer: coarse)`).
-- **Pressed:** `--color-accent-soft` fill, `--color-accent` edge and text, and a leading `●` glyph, so the state shows without colour too.
-- **Related (lit by a selected evidence item):** accent edge, no fill.
-- **Dimmed (not related to the current selection):** text switches to `--color-text-muted` and the edge to `--color-border`. Never dim with opacity: 55% opacity drops body text to about 3.6:1, below AA.
+### Text buttons (lenses, skills, tags, entry and role titles)
+Plain text with a dotted underline, solid on hover. No borders, no pills. Touch screens get 44px targets through padding.
 
-### Evidence card
-`<article>` on `--color-surface` with a 1px `--color-border` edge and `--radius-md`. Header row: ID chip, title (`--text-lg`, 600), meta line (role and dates, muted). Body: the resume line. Footer: metric list and skill tags.
-- **Highlighted** (matches the selected skill): accent edge plus a 3px accent left rule drawn as `box-shadow: inset 3px 0 0`. **Dimmed:** muted text, no opacity change (same rule as chips). Below 960px, unrelated cards are hidden instead, so matches sit right under the chips.
-- **Details:** a `<details>` disclosure ("How it works") holds the stage strip where there is one.
+### Entry
+A resume line or a project: ID (mono, muted) and title (600), the description (muted), an optional "How it works" disclosure, and its skills as a run of small text buttons. Hover and selection add a `--color-surface-2` background with an 8px radius; nothing else.
 
-### Metric
-The value in mono at 500 weight, then its label in muted sans. Numbers are copied exactly from the resume (`92%`, `500+`, `10M+`); never round or restate them.
+### Stage list ("How it works")
+An inline ordered list: "Question → Generate SQL → Validate → Execute", with the arrows drawn in CSS and hidden from screen readers. Stage names come only from the resume.
 
-### Status pill
-`--text-xs`, `--radius-sm`, a CSS-drawn dot plus a label: filled for Shipped, half-filled for In progress, a ring for Next and Planned. Colours from the status tokens.
+### Project entry
+Like an entry, plus a status word in mono and the colour of its state ("In progress", "Next", "Planned", "Shipped v1.0.0"), and a small definition list (Repo, Demo, Headline eval, Last push). Written by the daily sync.
 
-### Stage strip (pipeline diagram)
-An `<ol>` of boxes on `--color-surface-2`, joined by `→` (CSS generated, hidden from screen readers). It wraps to a vertical list under 600px. A loop-back step (for example "repair → validate") is a final line of plain text starting "Loop:". Stage names come only from words on the resume.
+### Status line
+"LangGraph: 2 resume lines and 1 project." with Copy link and Clear. It sits under the lenses on desktop; on phones it's fixed to the bottom of the screen while something is highlighted.
 
-### Project slot
-A card with three labelled slots: **Repo**, **Demo**, **Headline eval**. An empty slot shows a muted "Not public yet" or "Not run yet", never a dummy number.
+### Connectors
+Thin (1px) muted ink curves in the gutter between the sidebar and the resume, from the picked skill to its lines. Wide screens only, single skills or lines only.
 
-### Buttons and links
-- Links: accent text, underline offset 3px. Underline always on in body text; on hover only in nav and chips.
-- Button (theme toggle, "clear selection"): transparent, 1px `--color-border-strong` edge, `--radius-sm`, `--text-sm`.
+## Motion
 
-### Hiring lens (v2)
-A row labelled "Hiring for" of pill toggle buttons (RAG, Agents, Evals, Search, Data & cloud). Each lens is a named set of skills (`data-skills`), and selecting one lights up every card that uses any of them. Same pressed style as skill chips. Deep link: `?lens=rag`.
+Only what explains an action: background and colour changes at 150ms, connectors drawing in at 220ms. No pulsing, blinking, scroll reveals or hover zooms. `prefers-reduced-motion` turns every duration to 0.
 
-### Career timeline (v2)
-An ordered list of roles on a thin rule with dots: date (mono), role (sans 600), note (muted). Each item is a toggle that lights up that role's cards and the union of their skills. Horizontal from 768px, vertical below. Deep link: `?role=role-searce`.
+## Accessibility
 
-### Now-building strip (v2)
-A pill-shaped strip under the hero: "Now building", the project ID chip and name, plus the latest commit message and its age when the repo is public. Written by the daily sync; the commit is fetched live. A small pulsing dot in the progress colour, which stops under reduced motion.
+Landmarks, a skip link, full keyboard use (Tab, Enter or Space, Escape clears), `aria-pressed` on every toggle, an `aria-live` status, visible ink focus rings, and the page fully readable without JavaScript. Checked with axe on 8 states: no violations, nothing left for review.
 
-### Copy link (v2)
-In the map's status bar, shown only while something is selected. Copies the current URL (which encodes the selection) and announces "Link copied".
+## Avoid (these read as machine-made)
 
-### Focus
-Every interactive element shows `outline: 2px solid var(--color-accent); outline-offset: 2px` on `:focus-visible`. Never remove an outline without a replacement.
-
-## Motion (motion 3/10: subtle)
-
-- Colour, opacity and border changes: `--duration-fast` 150ms, `--ease-out`.
-- Connector lines draw in over `--duration-base` 220ms (`stroke-dashoffset`).
-- No scroll reveals. **Why not GSAP:** it is a ~70 KB dependency for an effect that hides content until scrolled, and the brief asks for a light page.
-- `@media (prefers-reduced-motion: reduce)`: every duration becomes 0, connectors appear without drawing, and smooth scrolling is off.
-
-## Accessibility rules
-
-- Semantic landmarks (`header`, `nav`, `main`, `footer`) and a "Skip to content" link as the first focusable element.
-- All interaction works by keyboard: Tab to a chip, Enter or Space toggles it, Escape clears the selection.
-- Selection changes are announced in an `aria-live="polite"` region.
-- The page is fully readable without JavaScript. JavaScript only adds filtering, connectors and live project data.
-- Decorative SVG gets `aria-hidden="true"`. Status never relies on colour alone.
-- **Keep contrast measurable.** Automated checkers (axe) can't read a background under an overlay, a pseudo-element with a fill or icon-like text glyphs, and pa11y reports those as errors. So: connectors live only in the gutter between the columns, accent rules are inset box-shadows, status dots are drawn in CSS, and placeholders are words ("Not yet"), not a lone dash.
-- Touch targets are at least 44×44px on coarse pointers.
-
-## Anti-patterns (do not use)
-
-- Skill percentage bars or star ratings (they claim precision nobody can measure).
-- Invented or rounded numbers, client names, phone numbers.
-- Emojis as icons, or Unicode symbols (◐ ○ ↺) as visible text. Use CSS shapes or inline SVG.
-- Hover lifts, parallax, scroll-jacking, typewriter effects, auto-playing media.
-- Content that is invisible until JavaScript or scrolling reveals it.
-- More than one accent colour.
+- Cream or beige backgrounds with a terracotta, rust or acid-green accent; purple-to-blue gradients; gradient text; glow halos.
+- Display serifs, italic serif headlines, oversized hero headlines, all-caps eyebrow labels above headings, tracked-out body text.
+- Cards in identical grids, cards inside cards, pills everywhere, thick coloured stripes on card edges, hairline border plus soft shadow.
+- Pulsing status dots, blinking cursors, bouncy easing, content hidden until an entrance animation runs.
+- Emoji anywhere, marketing phrases ("supercharge", "world-class"), forced contrasts ("Not X. Y."), em-dash-heavy copy.
+- Any credit line for the tools used to build the site.
 
 ## Pre-delivery checklist
 
-- [ ] Every colour and size comes from `assets/css/tokens.css`
-- [ ] Text contrast at least 4.5:1, control edges at least 3:1, in both themes
-- [ ] Visible focus on every interactive element; full keyboard path works
-- [ ] `prefers-reduced-motion` respected
-- [ ] Readable with JavaScript off
-- [ ] No horizontal page scroll at 375, 768, 1024 and 1440px
-- [ ] No emoji icons; `cursor: pointer` on clickable elements
+- [ ] Colours and sizes from `tokens.css`; nothing on the avoid list
+- [ ] Text contrast ≥4.5:1 and control edges ≥3:1 in both themes; muted text never on the marker
+- [ ] Keyboard path works; focus visible; Escape clears
+- [ ] Readable with JavaScript off; no horizontal scroll at 375, 768, 1024 and 1440px
 - [ ] Every number matches the resume or a committed eval results file

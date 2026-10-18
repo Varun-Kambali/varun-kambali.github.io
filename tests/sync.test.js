@@ -40,7 +40,7 @@ test("a public repo gets its link, demo, headline eval and Shipped status from a
   assert.equal(p1.live.headline, "Calorie MAPE: 31.2% → 6.4%");
   assert.equal(p1.live.demo, "https://example.org/demo");
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
-  assert.match(html, /<span class="pill" data-status="shipped" data-pill>Shipped v1\.0\.0<\/span>/);
+  assert.match(html, /<p class="entry__status" data-pill data-status="shipped">Shipped v1\.0\.0<\/p>/);
   assert.match(html, /Calorie MAPE: 31\.2% → 6\.4%<\/span> <a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md">results file<\/a>/);
   assert.match(html, /<!-- sync:stamp:start -->1 Nov 2026<!-- sync:stamp:end -->/);
 });
@@ -62,14 +62,13 @@ test("a new repo tagged 'portfolio' with a manifest joins the board", async () =
   );
   assert.deepEqual(projects.map((p) => p.id), ["P1", "P2", "P3", "P4"]);
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01", (w) => warnings.push(w));
-  assert.match(html, /id="map-P4"/);
-  assert.match(html, /id="P4" data-project data-repo="llm-gateway"/);
+  assert.match(html, /id="P4" data-evidence data-kind="project" data-project data-repo="llm-gateway"/);
   assert.ok(warnings.some((w) => w.includes('"not-a-skill"')), "unknown skills are reported, not rendered");
   assert.doesNotMatch(html, /data-tag="not-a-skill"/);
 });
 
 test("text from manifests is escaped", async () => {
-  const manifest = JSON.stringify({ tagline: '<img src=x onerror="alert(1)">' });
+  const manifest = JSON.stringify({ summary: '<img src=x onerror="alert(1)">' });
   const projects = await collect(config, fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/portfolio.json": manifest } }));
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
   assert.match(html, /&lt;img src=x onerror=&quot;alert\(1\)&quot;&gt;/);
@@ -114,11 +113,11 @@ test("an API failure stops the run instead of blanking the cards", async () => {
 
 test("the now-building strip follows the project in progress, then the next one", async () => {
   const inProgress = renderSite(site, await collect(config, fixture()), "Varun-Kambali", "2026-11-01");
-  assert.match(inProgress, /<span class="now__label">Now building<\/span> <a class="now__project" href="#P1">/);
+  assert.match(inProgress, /<p class="now" data-now data-repo="nutrition-mcp">Now building, in public: <a href="#P1">Nutrition MCP server<\/a>\./);
   const shipped = await collect(
     config,
     fixture({ repos: [repo("nutrition-mcp")], api: { "/repos/Varun-Kambali/nutrition-mcp/releases/latest": { tag_name: "v1.0.0" } } }),
   );
   const html = renderSite(site, shipped, "Varun-Kambali", "2026-11-01");
-  assert.match(html, /<p class="now" data-now data-repo="meal-planner-agents"><span class="now__label">Up next<\/span> <a class="now__project" href="#P2">/);
+  assert.match(html, /<p class="now" data-now data-repo="meal-planner-agents">Up next, in public: <a href="#P2">Meal-planner multi-agent<\/a>\./);
 });

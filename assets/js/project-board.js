@@ -80,7 +80,7 @@ async function fill(card) {
 
   const release = await fetchCached(`https://api.github.com/repos/${OWNER}/${repo}/releases/latest`, "json");
   if (release.ok && isV1OrLater(release.body.tag_name)) {
-    for (const pill of [card.querySelector("[data-pill]"), document.querySelector(`#map-${card.id} .pill`)]) {
+    for (const pill of [card.querySelector("[data-pill]")]) {
       if (!pill) continue;
       pill.dataset.status = "shipped";
       pill.textContent = `Shipped ${release.body.tag_name}`;
@@ -122,7 +122,7 @@ async function fillNow() {
   const latest = result.ok && Array.isArray(result.body) ? result.body[0] : null;
   if (!latest) return;
   const message = latest.commit.message.split("\n")[0];
-  slotEl.textContent = `· latest commit ${since(latest.commit.committer.date)}: “${message}”`;
+  slotEl.textContent = `Latest commit ${since(latest.commit.committer.date)}: “${message}”.`;
 }
 
 if (window.fetch) fillNow().catch(() => {});
