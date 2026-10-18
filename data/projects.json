@@ -1,0 +1,35 @@
+{
+  "owner": "Varun-Kambali",
+  "projects": [
+    {
+      "id": "P1",
+      "repo": "nutrition-mcp",
+      "title": "Nutrition MCP server",
+      "status": "progress",
+      "tagline": "MCP tools that give AI assistants sourced, unit-correct nutrition data, measured with and without the tools.",
+      "summary": "Ask an assistant how much protein is in 2 rotis and a katori of dal and it guesses, often wrongly, and Indian foods are poorly covered by Western databases. This open-source MCP server gives any MCP-capable assistant or agent sourced, unit-correct nutrition data instead.",
+      "measures": "Calorie and protein error, with vs without the tools",
+      "skills": ["mcp", "ci-evals", "evalsets", "structured", "python", "cicd"]
+    },
+    {
+      "id": "P2",
+      "repo": "meal-planner-agents",
+      "title": "Meal-planner multi-agent",
+      "status": "next",
+      "tagline": "LangGraph agents plan a week of meals within hard limits, checked in code, traced, and gated by evals in CI.",
+      "summary": "Planning a week of meals that hits calorie and protein targets, follows diet rules and allergies, and fits a budget takes hours, and LLM-only planners break those limits silently. LangGraph agents draft, verify (macros computed in code through P1 over MCP), critique and repair the plan, with Langfuse traces and evals that gate CI.",
+      "measures": "Hard-constraint pass rate, single call vs agent pipeline",
+      "skills": ["agents", "langgraph", "mcp", "ci-evals", "observability", "frontend", "fastapi", "litellm", "docker", "cicd"]
+    },
+    {
+      "id": "P3",
+      "repo": "household-docs-vault",
+      "title": "Household docs vault",
+      "status": "planned",
+      "tagline": "Private document AI that runs locally: field extraction, expiry reminders and cited answers, on a LoRA-fine-tuned open-weight model.",
+      "summary": "Bills, warranties and insurance policies end up scattered, renewals get missed, and people won’t upload these papers to a cloud LLM. This vault extracts fields, reminds before expiry dates and answers questions with citations, running locally on a small open-weight model fine-tuned with LoRA.",
+      "measures": "Field-level F1, fine-tuned model vs Gemini Flash",
+      "skills": ["finetune", "openweight", "rag", "citations", "structured", "fastapi", "docker", "frontend"]
+    }
+  ]
+}

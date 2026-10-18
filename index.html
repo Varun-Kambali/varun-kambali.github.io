@@ -469,6 +469,7 @@
               <p class="meta">Open source, so the code can be read. Details and live status in <a href="#projects">Projects</a>.</p>
             </header>
 
+            <!-- sync:map-projects:start -->
             <article class="card card--project" id="map-P1" data-evidence data-kind="project">
               <header class="card__head">
                 <span class="id-chip">P1</span>
@@ -476,7 +477,7 @@
                 <span class="pill" data-status="progress">In progress</span>
               </header>
               <p>MCP tools that give AI assistants sourced, unit-correct nutrition data, measured with and without the tools.</p>
-              <ul class="tags" aria-label="Skills it will show">
+              <ul class="tags" aria-label="Skills it shows">
                 <li data-tag="mcp">MCP servers</li>
                 <li data-tag="ci-evals">Evals in CI</li>
                 <li data-tag="evalsets">Eval datasets</li>
@@ -485,7 +486,6 @@
                 <li data-tag="cicd">CI/CD</li>
               </ul>
             </article>
-
             <article class="card card--project" id="map-P2" data-evidence data-kind="project">
               <header class="card__head">
                 <span class="id-chip">P2</span>
@@ -493,12 +493,12 @@
                 <span class="pill" data-status="next">Next</span>
               </header>
               <p>LangGraph agents plan a week of meals within hard limits, checked in code, traced, and gated by evals in CI.</p>
-              <ul class="tags" aria-label="Skills it will show">
+              <ul class="tags" aria-label="Skills it shows">
                 <li data-tag="agents">Agent pipelines</li>
                 <li data-tag="langgraph">LangGraph</li>
                 <li data-tag="mcp">MCP servers</li>
                 <li data-tag="ci-evals">Evals in CI</li>
-                <li data-tag="observability">LLM observability</li>
+                <li data-tag="observability">LLM observability (Langfuse)</li>
                 <li data-tag="frontend">Frontend and deployment</li>
                 <li data-tag="fastapi">FastAPI</li>
                 <li data-tag="litellm">LiteLLM</li>
@@ -506,7 +506,6 @@
                 <li data-tag="cicd">CI/CD</li>
               </ul>
             </article>
-
             <article class="card card--project" id="map-P3" data-evidence data-kind="project">
               <header class="card__head">
                 <span class="id-chip">P3</span>
@@ -514,7 +513,7 @@
                 <span class="pill" data-status="planned">Planned</span>
               </header>
               <p>Private document AI that runs locally: field extraction, expiry reminders and cited answers, on a LoRA-fine-tuned open-weight model.</p>
-              <ul class="tags" aria-label="Skills it will show">
+              <ul class="tags" aria-label="Skills it shows">
                 <li data-tag="finetune">Fine-tuning (LoRA)</li>
                 <li data-tag="openweight">Open-weight models</li>
                 <li data-tag="rag">RAG</li>
@@ -525,6 +524,7 @@
                 <li data-tag="frontend">Frontend and deployment</li>
               </ul>
             </article>
+            <!-- sync:map-projects:end -->
           </section>
         </div>
 
@@ -539,6 +539,7 @@
       </header>
 
       <div class="projects">
+        <!-- sync:board:start -->
         <article class="project" id="P1" data-project data-repo="nutrition-mcp">
           <header class="project__head">
             <span class="id-chip">P1</span>
@@ -553,7 +554,6 @@
             <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
-
         <article class="project" id="P2" data-project data-repo="meal-planner-agents">
           <header class="project__head">
             <span class="id-chip">P2</span>
@@ -568,7 +568,6 @@
             <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
-
         <article class="project" id="P3" data-project data-repo="household-docs-vault">
           <header class="project__head">
             <span class="id-chip">P3</span>
@@ -583,8 +582,9 @@
             <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
+        <!-- sync:board:end -->
       </div>
-      <p class="fineprint" data-board-note>Repo, demo, last push and eval result come from the GitHub API and each repo’s <code>evals/results/summary.md</code> when the page loads.</p>
+      <p class="fineprint" data-board-note>Repo, demo, status and eval result sync daily from each project’s GitHub repo and its <code>evals/results/summary.md</code>, and refresh live when the page loads. Last change: <!-- sync:stamp:start -->18 Oct 2026<!-- sync:stamp:end -->.</p>
     </section>
 
     <section class="section wrap" id="credentials" aria-labelledby="credentials-title">
