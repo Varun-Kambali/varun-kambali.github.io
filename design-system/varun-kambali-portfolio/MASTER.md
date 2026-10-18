@@ -21,7 +21,7 @@ The site reads like a clean engineering report about one engineer. Every claim c
 
 ## Color
 
-One accent. Neutral greys carry the structure. Status colours appear only in status pills, and each pill also has a glyph and a text label, so colour is never the only signal.
+One accent. Neutral greys carry the structure. Status colours appear only in status pills, and each pill also has a dot shape and a text label, so colour is never the only signal.
 
 All text pairs below were checked against WCAG 2.2 AA (4.5:1 for text, 3:1 for UI boundaries) on 2026-10-18.
 
@@ -37,9 +37,9 @@ All text pairs below were checked against WCAG 2.2 AA (4.5:1 for text, 3:1 for U
 | Accent | `--color-accent` | `#1F4ED8` | `#8AAEFF` | Links, selected state, focus ring, connectors (6.2:1 / 8.6:1) |
 | Accent soft | `--color-accent-soft` | `#E3EAFE` | `#1B2A48` | Background of selected or highlighted items |
 | On accent | `--color-on-accent` | `#FFFFFF` | `#0E1116` | Text on a solid accent fill |
-| In progress | `--status-progress-fg` / `-bg` | `#8A4B08` / `#FDF1D8` | `#F4C873` / `#33270F` | Pill: ◐ In progress (6.1:1 / 9.3:1) |
-| Shipped | `--status-ok-fg` / `-bg` | `#13612E` / `#DDF5E4` | `#8FE0A8` / `#122A1B` | Pill: ● Shipped (6.6:1 / 9.8:1) |
-| Planned | `--status-plan-fg` / `-bg` | `#3B4554` / `#E6E9EE` | `#C9D1DC` / `#252D38` | Pill: ○ Next, ○ Planned (8.0:1 / 9.0:1) |
+| In progress | `--status-progress-fg` / `-bg` | `#8A4B08` / `#FDF1D8` | `#F4C873` / `#33270F` | Pill: half dot, In progress (6.1:1 / 9.3:1) |
+| Shipped | `--status-ok-fg` / `-bg` | `#13612E` / `#DDF5E4` | `#8FE0A8` / `#122A1B` | Pill: filled dot, Shipped (6.6:1 / 9.8:1) |
+| Planned | `--status-plan-fg` / `-bg` | `#3B4554` / `#E6E9EE` | `#C9D1DC` / `#252D38` | Pill: ring, Next or Planned (8.0:1 / 9.0:1) |
 
 **Why not a stock blue-and-purple palette:** a purple accent next to a blue primary gives two competing accents, and a blue-on-blue foreground (`#1E40AF` body text) reads as a link everywhere. A report needs neutral ink with one accent.
 
@@ -96,17 +96,17 @@ Mono, `--text-xs`, 1px `--color-border-strong` edge, `--radius-sm`, padding 1px 
 
 ### Evidence card
 `<article>` on `--color-surface` with a 1px `--color-border` edge and `--radius-md`. Header row: ID chip, title (`--text-lg`, 600), meta line (role and dates, muted). Body: the resume line. Footer: metric list and skill tags.
-- **Highlighted** (matches the selected skill): 2px `--color-accent` left rule plus an accent-soft header. **Dimmed:** muted text, no opacity change (same rule as chips). Below 960px, unrelated cards are hidden instead, so matches sit right under the chips.
+- **Highlighted** (matches the selected skill): accent edge plus a 3px accent left rule drawn as `box-shadow: inset 3px 0 0`. **Dimmed:** muted text, no opacity change (same rule as chips). Below 960px, unrelated cards are hidden instead, so matches sit right under the chips.
 - **Details:** a `<details>` disclosure ("How it works") holds the stage strip where there is one.
 
 ### Metric
 The value in mono at 500 weight, then its label in muted sans. Numbers are copied exactly from the resume (`92%`, `500+`, `10M+`); never round or restate them.
 
 ### Status pill
-`--text-xs`, `--radius-sm`, glyph plus label: `● Shipped`, `◐ In progress`, `○ Next`, `○ Planned`. Colours from the status tokens.
+`--text-xs`, `--radius-sm`, a CSS-drawn dot plus a label: filled for Shipped, half-filled for In progress, a ring for Next and Planned. Colours from the status tokens.
 
 ### Stage strip (pipeline diagram)
-An `<ol>` of boxes on `--color-surface-2`, joined by `→` (CSS generated, hidden from screen readers). It wraps to a vertical list under 600px. A loop-back step (for example "repair → validate") is a final row with a `↺` glyph and plain text. Stage names come only from words on the resume.
+An `<ol>` of boxes on `--color-surface-2`, joined by `→` (CSS generated, hidden from screen readers). It wraps to a vertical list under 600px. A loop-back step (for example "repair → validate") is a final line of plain text starting "Loop:". Stage names come only from words on the resume.
 
 ### Project slot
 A card with three labelled slots: **Repo**, **Demo**, **Headline eval**. An empty slot shows a muted "Not public yet" or "Not run yet", never a dummy number.
@@ -132,13 +132,14 @@ Every interactive element shows `outline: 2px solid var(--color-accent); outline
 - Selection changes are announced in an `aria-live="polite"` region.
 - The page is fully readable without JavaScript. JavaScript only adds filtering, connectors and live project data.
 - Decorative SVG gets `aria-hidden="true"`. Status never relies on colour alone.
+- **Keep contrast measurable.** Automated checkers (axe) can't read a background under an overlay, a pseudo-element with a fill or icon-like text glyphs, and pa11y reports those as errors. So: connectors live only in the gutter between the columns, accent rules are inset box-shadows, status dots are drawn in CSS, and placeholders are words ("Not yet"), not a lone dash.
 - Touch targets are at least 44×44px on coarse pointers.
 
 ## Anti-patterns (do not use)
 
 - Skill percentage bars or star ratings (they claim precision nobody can measure).
 - Invented or rounded numbers, client names, phone numbers.
-- Emojis as icons. Use text glyphs or inline SVG.
+- Emojis as icons, or Unicode symbols (◐ ○ ↺) as visible text. Use CSS shapes or inline SVG.
 - Hover lifts, parallax, scroll-jacking, typewriter effects, auto-playing media.
 - Content that is invisible until JavaScript or scrolling reveals it.
 - More than one accent colour.
