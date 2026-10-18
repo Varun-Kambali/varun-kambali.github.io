@@ -92,11 +92,11 @@ Mono, `--text-xs`, 1px `--color-border-strong` edge, `--radius-sm`, padding 1px 
 `<button aria-pressed>` in the sans at `--text-sm`, 1px `--color-border-strong` edge, `--radius-sm`, min height 32px (44px on touch screens via `@media (pointer: coarse)`).
 - **Pressed:** `--color-accent-soft` fill, `--color-accent` edge and text, and a leading `●` glyph, so the state shows without colour too.
 - **Related (lit by a selected evidence item):** accent edge, no fill.
-- **Dimmed (not related to the current selection):** 55% opacity, still focusable and readable.
+- **Dimmed (not related to the current selection):** text switches to `--color-text-muted` and the edge to `--color-border`. Never dim with opacity: 55% opacity drops body text to about 3.6:1, below AA.
 
 ### Evidence card
 `<article>` on `--color-surface` with a 1px `--color-border` edge and `--radius-md`. Header row: ID chip, title (`--text-lg`, 600), meta line (role and dates, muted). Body: the resume line. Footer: metric list and skill tags.
-- **Highlighted** (matches the selected skill): 2px `--color-accent` left rule plus an accent-soft header. **Dimmed:** 55% opacity.
+- **Highlighted** (matches the selected skill): 2px `--color-accent` left rule plus an accent-soft header. **Dimmed:** muted text, no opacity change (same rule as chips). Below 960px, unrelated cards are hidden instead, so matches sit right under the chips.
 - **Details:** a `<details>` disclosure ("How it works") holds the stage strip where there is one.
 
 ### Metric

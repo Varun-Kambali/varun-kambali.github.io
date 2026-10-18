@@ -51,7 +51,6 @@
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   --shadow-focus: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-accent);
-  --dim-opacity: 0.55;
 }
 
 /* Dark theme: follows the OS unless the visitor picked light */
