@@ -110,3 +110,14 @@ test("an API failure stops the run instead of blanking the cards", async () => {
     globalThis.fetch = original;
   }
 });
+
+test("the now-building strip follows the project in progress, then the next one", async () => {
+  const inProgress = renderSite(site, await collect(config, fixture()), "Varun-Kambali", "2026-11-01");
+  assert.match(inProgress, /<span class="now__label">Now building<\/span> <a class="now__project" href="#P1">/);
+  const shipped = await collect(
+    config,
+    fixture({ repos: [repo("nutrition-mcp")], api: { "/repos/Varun-Kambali/nutrition-mcp/releases/latest": { tag_name: "v1.0.0" } } }),
+  );
+  const html = renderSite(site, shipped, "Varun-Kambali", "2026-11-01");
+  assert.match(html, /<p class="now" data-now data-repo="meal-planner-agents"><span class="now__label">Up next<\/span> <a class="now__project" href="#P2">/);
+});

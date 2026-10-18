@@ -11,6 +11,8 @@
     "http://127.0.0.1:8765/?theme=dark",
     "http://127.0.0.1:8765/?theme=light&skill=bigquery",
     "http://127.0.0.1:8765/?theme=dark&line=E3",
+    "http://127.0.0.1:8765/?theme=light&lens=agents",
+    "http://127.0.0.1:8765/?theme=dark&role=role-cloudside-sr",
     {
       "url": "http://127.0.0.1:8765/?theme=light&skill=agents",
       "viewport": { "width": 375, "height": 812, "isMobile": true }

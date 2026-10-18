@@ -6,6 +6,7 @@ Evidence map integrity:
     (data-listed="K2"), unless it is only shown by projects ("building now");
     a skill that a resume line uses must not carry data-listed
   - every card has an id and at least one skill
+  - every hiring lens names known skills, and every career step points at a role
 Page hygiene:
   - ids are unique and every in-page link (#id) has a target
   - external links use https; images have alt text
@@ -39,6 +40,8 @@ class SiteParser(HTMLParser):
         self.cards: dict[str, list[str]] = {}  # card id -> skill ids
         self.kinds: dict[str, str] = {}  # card id -> "line" (resume) or "project"
         self._card: str | None = None  # the evidence card (an <article>) being read
+        self.lenses: dict[str, list[str]] = {}  # lens id -> skill ids
+        self.role_filters: list[str] = []  # career steps -> role heading ids
         self.text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
@@ -59,6 +62,10 @@ class SiteParser(HTMLParser):
             self.kinds[self._card] = a.get("data-kind") or ""
         if "data-tag" in a and self._card:
             self.cards[self._card].append(a["data-tag"] or "")
+        if "data-lens" in a:
+            self.lenses[a["data-lens"] or ""] = (a.get("data-skills") or "").split()
+        if "data-role-filter" in a:
+            self.role_filters.append(a["data-role-filter"] or "")
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "article":
@@ -108,6 +115,16 @@ def check(path: Path) -> list[str]:
             errors.append(f"{name}: skill '{skill}' has no evidence and no data-listed row")
         if skill in used_by_lines and listed:
             errors.append(f"{name}: a resume line uses skill '{skill}', so drop its data-listed attribute")
+
+    for lens, skills in parser.lenses.items():
+        if not skills:
+            errors.append(f"{name}: lens '{lens}' names no skills")
+        for skill in skills:
+            if skill not in parser.skills:
+                errors.append(f"{name}: lens '{lens}' uses unknown skill '{skill}'")
+    for role in parser.role_filters:
+        if role not in seen:
+            errors.append(f"{name}: career step points at missing role '{role}'")
 
     text = " ".join(parser.text)
     for match in PHONE.finditer(text):

@@ -7,7 +7,7 @@
 
 **Project:** Varun Kambali portfolio site
 **Written:** 2026-10-18. Base style: Swiss Modernism 2.0 (grid, rational spacing), with subtle motion and standard density.
-**Direction:** an "eval report". Where it departs from a stock Swiss palette, typeface or motion, the reason is given under each section.
+**Direction:** v2 (2026-10-18) is a "warm report": the evidence-map bones of v1, with warm paper tones, a display serif and a first-person voice. Where it departs from a stock Swiss palette, typeface or motion, the reason is given under each section.
 
 ---
 
@@ -23,31 +23,32 @@ The site reads like a clean engineering report about one engineer. Every claim c
 
 One accent. Neutral greys carry the structure. Status colours appear only in status pills, and each pill also has a dot shape and a text label, so colour is never the only signal.
 
-All text pairs below were checked against WCAG 2.2 AA (4.5:1 for text, 3:1 for UI boundaries) on 2026-10-18.
+All text pairs below pass WCAG 2.2 AA (4.5:1 for text, 3:1 for UI boundaries), checked on 2026-10-18.
 
 | Role | Token | Light | Dark | Use |
 |---|---|---|---|---|
-| Page | `--color-bg` | `#F6F7F9` | `#0E1116` | Page background |
-| Surface | `--color-surface` | `#FFFFFF` | `#151A21` | Cards, panels |
-| Surface 2 | `--color-surface-2` | `#EDF0F4` | `#1C232C` | Table headers, code, stage boxes |
-| Text | `--color-text` | `#111827` | `#E7EAEE` | Body and headings (16.5:1 / 15.7:1 on page) |
-| Muted text | `--color-text-muted` | `#4A5361` | `#A4ADB9` | Meta lines, captions (7.3:1 / 8.3:1) |
-| Border | `--color-border` | `#D4D9E0` | `#2C3440` | Dividers, card edges (decorative) |
-| Strong border | `--color-border-strong` | `#7D8796` | `#6B7685` | Edges of controls such as chips and buttons (3.4:1 / 4.1:1) |
-| Accent | `--color-accent` | `#1F4ED8` | `#8AAEFF` | Links, selected state, focus ring, connectors (6.2:1 / 8.6:1) |
-| Accent soft | `--color-accent-soft` | `#E3EAFE` | `#1B2A48` | Background of selected or highlighted items |
-| On accent | `--color-on-accent` | `#FFFFFF` | `#0E1116` | Text on a solid accent fill |
-| In progress | `--status-progress-fg` / `-bg` | `#8A4B08` / `#FDF1D8` | `#F4C873` / `#33270F` | Pill: half dot, In progress (6.1:1 / 9.3:1) |
-| Shipped | `--status-ok-fg` / `-bg` | `#13612E` / `#DDF5E4` | `#8FE0A8` / `#122A1B` | Pill: filled dot, Shipped (6.6:1 / 9.8:1) |
-| Planned | `--status-plan-fg` / `-bg` | `#3B4554` / `#E6E9EE` | `#C9D1DC` / `#252D38` | Pill: ring, Next or Planned (8.0:1 / 9.0:1) |
+| Page | `--color-bg` | `#FBF7F0` | `#17130F` | Page background (warm paper / warm near-black) |
+| Surface | `--color-surface` | `#FFFDF9` | `#211B16` | Cards, panels |
+| Surface 2 | `--color-surface-2` | `#F3ECE1` | `#2A231D` | Table headers, code, stage boxes |
+| Text | `--color-text` | `#1C1917` | `#F1EBE3` | Body and headings |
+| Muted text | `--color-text-muted` | `#57534E` | `#B5AB9F` | Meta lines, captions, dimmed items |
+| Border | `--color-border` | `#E5DCCF` | `#3A3129` | Dividers, card edges (decorative) |
+| Strong border | `--color-border-strong` | `#8A7F72` | `#7E7366` | Edges of controls such as chips and buttons (≥3:1) |
+| Accent (terracotta) | `--color-accent` | `#9A3412` | `#F4A47C` | Links, selected state, focus ring, connectors (6.8:1 / 9.2:1 on page) |
+| Accent soft | `--color-accent-soft` | `#F7E3D7` | `#3B2418` | Background of selected or highlighted items |
+| On accent | `--color-on-accent` | `#FFFFFF` | `#17130F` | Text on a solid accent fill |
+| In progress | `--status-progress-fg` / `-bg` | `#8A4B08` / `#FBEFD5` | `#F4C873` / `#33270F` | Pill: half dot, In progress |
+| Shipped | `--status-ok-fg` / `-bg` | `#14532D` / `#DCF2E3` | `#8FE0A8` / `#13291B` | Pill: filled dot, Shipped (green is reserved for this) |
+| Planned | `--status-plan-fg` / `-bg` | `#44403C` / `#ECE6DC` | `#D6CEC4` / `#2E2721` | Pill: ring, Next or Planned |
 
-**Why not a stock blue-and-purple palette:** a purple accent next to a blue primary gives two competing accents, and a blue-on-blue foreground (`#1E40AF` body text) reads as a link everywhere. A report needs neutral ink with one accent.
+**Why terracotta on warm paper (v2):** v2 aims for a look that feels natural and personal. A warm palette (terracotta on cream, green kept for success) adds warmth without losing the single-accent discipline of v1, whose cool blue read as a dashboard. All pairs were rechecked against WCAG AA on 2026-10-18; none fail.
 
 **Theme:** light and dark both ship. The page follows `prefers-color-scheme` and a toggle overrides it (`data-theme="light|dark"` on `<html>`, remembered in `localStorage` when available).
 
 ## Typography
 
-- **Sans (headings, body):** IBM Plex Sans 400, 500, 600.
+- **Display (h1, the headline, section headings):** Fraunces 500–600, optical size on. A warm, slightly soft serif: the human-warmth layer of a display serif + sans + mono stack.
+- **Sans (body, UI, card titles):** IBM Plex Sans 400, 500, 600.
 - **Mono (IDs, numbers, code, metrics):** IBM Plex Mono 400, 500.
 - **Why:** Plex was drawn for technical documentation, and its mono pairs exactly with the sans. Inter is fine but generic, and it has no matching mono.
 - **Loading:** Google Fonts with `display=swap` and `preconnect`. The system fallback stack keeps the layout stable if the fonts fail to load.
@@ -55,7 +56,7 @@ All text pairs below were checked against WCAG 2.2 AA (4.5:1 for text, 3:1 for U
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 ```
 
 | Token | Size / line height | Use |
@@ -67,6 +68,7 @@ All text pairs below were checked against WCAG 2.2 AA (4.5:1 for text, 3:1 for U
 | `--text-xl` | 22px / 1.3 | Section headings (h2) |
 | `--text-2xl` | 28px / 1.2 | Name (h1) on phones |
 | `--text-3xl` | 36px / 1.15 | Name (h1) on wide screens |
+| `--text-display` | 32–52px fluid / 1.1 | The first-person headline in the hero |
 
 Numbers use `font-variant-numeric: tabular-nums`. Line length stays at 60–75 characters (`max-width: 68ch` on prose).
 
@@ -74,7 +76,7 @@ Numbers use `font-variant-numeric: tabular-nums`. Line length stays at 60–75 c
 
 Spacing scale (standard density): `--space-xs` 4px, `--space-sm` 8px, `--space-md` 16px, `--space-lg` 24px, `--space-xl` 32px, `--space-2xl` 48px, `--space-3xl` 64px. Page gutter: 16px on phones, 32px from 768px.
 
-- **Radius:** `--radius-sm` 4px (chips, pills, stage boxes), `--radius-md` 8px (cards, panels). Small radii read as precise; 12–16px radii read as consumer app.
+- **Radius:** `--radius-sm` 4px (ID chips, stage boxes), `--radius-md` 12px (cards, panels), `--radius-pill` (skill chips, lens buttons, the now-building strip). v2 rounds the interactive pieces so they feel friendly, while ID chips stay square as the "report" detail.
 - **Elevation:** borders, not shadows. `--shadow-focus` is the only shadow-like token. Cards do not lift on hover, because a lift on every card adds noise and shifts layout.
 
 ## Layout
@@ -114,6 +116,18 @@ A card with three labelled slots: **Repo**, **Demo**, **Headline eval**. An empt
 ### Buttons and links
 - Links: accent text, underline offset 3px. Underline always on in body text; on hover only in nav and chips.
 - Button (theme toggle, "clear selection"): transparent, 1px `--color-border-strong` edge, `--radius-sm`, `--text-sm`.
+
+### Hiring lens (v2)
+A row labelled "Hiring for" of pill toggle buttons (RAG, Agents, Evals, Search, Data & cloud). Each lens is a named set of skills (`data-skills`), and selecting one lights up every card that uses any of them. Same pressed style as skill chips. Deep link: `?lens=rag`.
+
+### Career timeline (v2)
+An ordered list of roles on a thin rule with dots: date (mono), role (sans 600), note (muted). Each item is a toggle that lights up that role's cards and the union of their skills. Horizontal from 768px, vertical below. Deep link: `?role=role-searce`.
+
+### Now-building strip (v2)
+A pill-shaped strip under the hero: "Now building", the project ID chip and name, plus the latest commit message and its age when the repo is public. Written by the daily sync; the commit is fetched live. A small pulsing dot in the progress colour, which stops under reduced motion.
+
+### Copy link (v2)
+In the map's status bar, shown only while something is selected. Copies the current URL (which encodes the selection) and announces "Link copied".
 
 ### Focus
 Every interactive element shows `outline: 2px solid var(--color-accent); outline-offset: 2px` on `:focus-visible`. Never remove an outline without a replacement.
