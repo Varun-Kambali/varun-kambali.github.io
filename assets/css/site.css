@@ -133,6 +133,17 @@ code { font-size: 0.9em; background: var(--color-surface-2); padding: 0 var(--sp
   padding: 2px var(--space-sm);
   white-space: nowrap;
 }
+/* The dot is drawn in CSS, not with text glyphs: filled = shipped, half = in progress, ring = next or planned */
+.pill::before {
+  content: "";
+  flex: none;
+  width: 0.625em;
+  height: 0.625em;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+.pill[data-status="shipped"]::before { background: currentColor; }
+.pill[data-status="progress"]::before { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
 .pill[data-status="progress"] { color: var(--status-progress-fg); background: var(--status-progress-bg); }
 .pill[data-status="shipped"] { color: var(--status-ok-fg); background: var(--status-ok-bg); }
 .pill[data-status="next"],
@@ -185,8 +196,9 @@ dt { font-size: var(--text-xs); color: var(--color-text-muted); text-transform: 
 
 .map__connectors {
   position: absolute;
-  inset: 0;
-  width: 100%;
+  top: 0;
+  left: 0;
+  width: 0;
   height: 100%;
   pointer-events: none;
   overflow: visible;
@@ -278,7 +290,7 @@ button.skill:hover { border-color: var(--color-accent); }
     column-gap: var(--space-3xl);
     align-items: start;
   }
-  .map__connectors { display: block; }
+  .map.has-selection .map__connectors { display: block; }
   .map__skills {
     position: sticky;
     top: var(--space-md);
@@ -304,22 +316,11 @@ button.skill:hover { border-color: var(--color-accent); }
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
   scroll-margin-top: var(--space-xl);
 }
-.card::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  top: -1px;
-  bottom: -1px;
-  width: 3px;
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
-  background: transparent;
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-.card.is-match { border-color: var(--color-accent); }
-.card.is-match::before { background: var(--color-accent); }
+/* The accent rule is an inset shadow, not a pseudo-element, so contrast checkers can read the background */
+.card.is-match { border-color: var(--color-accent); box-shadow: inset 3px 0 0 var(--color-accent); }
 .card.is-match .card__head { color: var(--color-accent); }
 .card.is-selected { background: var(--color-accent-soft); }
 .card.is-dim { color: var(--color-text-muted); }

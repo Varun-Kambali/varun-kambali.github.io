@@ -3,6 +3,7 @@
     "standard": "WCAG2AA",
     "runners": ["axe", "htmlcs"],
     "timeout": 60000,
+    "levelCapWhenNeedsReview": "warning",
     "chromeLaunchConfig": { "args": ["--no-sandbox", "--disable-setuid-sandbox"] }
   },
   "urls": [

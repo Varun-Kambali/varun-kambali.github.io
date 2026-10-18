@@ -60,7 +60,7 @@ function setLink(el, href, text) {
 
 function formatDate(iso) {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "–";
+  if (Number.isNaN(d.getTime())) return "Unknown";
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
@@ -83,11 +83,7 @@ async function fill(card) {
     for (const pill of [card.querySelector("[data-pill]"), document.querySelector(`#map-${card.id} .pill`)]) {
       if (!pill) continue;
       pill.dataset.status = "shipped";
-      pill.replaceChildren();
-      const glyph = document.createElement("span");
-      glyph.setAttribute("aria-hidden", "true");
-      glyph.textContent = "●";
-      pill.append(glyph, ` Shipped ${release.body.tag_name}`);
+      pill.textContent = `Shipped ${release.body.tag_name}`;
     }
   }
 

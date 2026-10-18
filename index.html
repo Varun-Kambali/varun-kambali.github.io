@@ -206,7 +206,7 @@
                   <li>Validate</li>
                   <li>Execute</li>
                 </ol>
-                <p class="stages__loop"><span aria-hidden="true">↺</span> If validation fails: repair the SQL, then validate again.</p>
+                <p class="stages__loop">Loop: if validation fails, repair the SQL and validate again.</p>
                 <p class="stages__note">Stage names only. The client system is under NDA.</p>
               </details>
               <ul class="tags" aria-label="Skills used">
@@ -473,7 +473,7 @@
               <header class="card__head">
                 <span class="id-chip">P1</span>
                 <h4 class="card__title">Nutrition MCP server</h4>
-                <span class="pill" data-status="progress"><span aria-hidden="true">◐</span> In progress</span>
+                <span class="pill" data-status="progress">In progress</span>
               </header>
               <p>MCP tools that give AI assistants sourced, unit-correct nutrition data, measured with and without the tools.</p>
               <ul class="tags" aria-label="Skills it will show">
@@ -490,7 +490,7 @@
               <header class="card__head">
                 <span class="id-chip">P2</span>
                 <h4 class="card__title">Meal-planner multi-agent</h4>
-                <span class="pill" data-status="next"><span aria-hidden="true">○</span> Next</span>
+                <span class="pill" data-status="next">Next</span>
               </header>
               <p>LangGraph agents plan a week of meals within hard limits, checked in code, traced, and gated by evals in CI.</p>
               <ul class="tags" aria-label="Skills it will show">
@@ -511,7 +511,7 @@
               <header class="card__head">
                 <span class="id-chip">P3</span>
                 <h4 class="card__title">Household docs vault</h4>
-                <span class="pill" data-status="planned"><span aria-hidden="true">○</span> Planned</span>
+                <span class="pill" data-status="planned">Planned</span>
               </header>
               <p>Private document AI that runs locally: field extraction, expiry reminders and cited answers, on a LoRA-fine-tuned open-weight model.</p>
               <ul class="tags" aria-label="Skills it will show">
@@ -543,14 +543,14 @@
           <header class="project__head">
             <span class="id-chip">P1</span>
             <h3>Nutrition MCP server</h3>
-            <span class="pill" data-status="progress" data-pill><span aria-hidden="true">◐</span> In progress</span>
+            <span class="pill" data-status="progress" data-pill>In progress</span>
           </header>
           <p>Ask an assistant how much protein is in 2 rotis and a katori of dal and it guesses, often wrongly, and Indian foods are poorly covered by Western databases. This open-source MCP server gives any MCP-capable assistant or agent sourced, unit-correct nutrition data instead.</p>
           <dl class="slots">
             <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
             <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
             <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Calorie and protein error, with vs without the tools</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
-            <div><dt>Last push</dt><dd data-slot="updated">–</dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
 
@@ -558,14 +558,14 @@
           <header class="project__head">
             <span class="id-chip">P2</span>
             <h3>Meal-planner multi-agent</h3>
-            <span class="pill" data-status="next" data-pill><span aria-hidden="true">○</span> Next</span>
+            <span class="pill" data-status="next" data-pill>Next</span>
           </header>
           <p>Planning a week of meals that hits calorie and protein targets, follows diet rules and allergies, and fits a budget takes hours, and LLM-only planners break those limits silently. LangGraph agents draft, verify (macros computed in code through P1 over MCP), critique and repair the plan, with Langfuse traces and evals that gate CI.</p>
           <dl class="slots">
             <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
             <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
             <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Hard-constraint pass rate, single call vs agent pipeline</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
-            <div><dt>Last push</dt><dd data-slot="updated">–</dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
 
@@ -573,14 +573,14 @@
           <header class="project__head">
             <span class="id-chip">P3</span>
             <h3>Household docs vault</h3>
-            <span class="pill" data-status="planned" data-pill><span aria-hidden="true">○</span> Planned</span>
+            <span class="pill" data-status="planned" data-pill>Planned</span>
           </header>
           <p>Bills, warranties and insurance policies end up scattered, renewals get missed, and people won’t upload these papers to a cloud LLM. This vault extracts fields, reminds before expiry dates and answers questions with citations, running locally on a small open-weight model fine-tuned with LoRA.</p>
           <dl class="slots">
             <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
             <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
             <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Field-level F1, fine-tuned model vs Gemini Flash</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
-            <div><dt>Last push</dt><dd data-slot="updated">–</dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
           </dl>
         </article>
       </div>

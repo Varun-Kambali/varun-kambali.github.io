@@ -191,8 +191,14 @@
   function draw() {
     svg.replaceChildren();
     if (!state || !wide.matches) return;
+    // The SVG covers only the gutter between the columns, so it never sits over
+    // text (an overlay there would stop contrast checkers reading the background).
     const box = map.getBoundingClientRect();
     const panel = map.querySelector(".map__skills").getBoundingClientRect();
+    const column = map.querySelector(".map__evidence").getBoundingClientRect();
+    const left = panel.right - box.left;
+    svg.style.left = `${left}px`;
+    svg.style.width = `${Math.max(0, column.left - panel.right)}px`;
     const pairs = [];
 
     if (state.type === "skill") {
@@ -206,9 +212,9 @@
       const c = chip.getBoundingClientRect();
       const k = card.getBoundingClientRect();
       // Start at the panel's edge, level with the chip, so curves never cross other chips.
-      const x1 = panel.right + 2 - box.left;
+      const x1 = 3;
       const y1 = clamp(c.top + c.height / 2, panel.top + 4, panel.bottom - 4) - box.top;
-      const x2 = k.left - box.left;
+      const x2 = k.left - box.left - left;
       const y2 = k.top + 28 - box.top;
       const dx = Math.max(24, (x2 - x1) / 2);
       const path = document.createElementNS(SVG_NS, "path");
