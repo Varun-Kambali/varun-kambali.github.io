@@ -93,7 +93,7 @@ async function fill(card) {
   if (summary.ok) {
     const found = headline(summary.body, card.dataset.evalRow);
     const value = card.querySelector("[data-slot-value]");
-    if (found && value) {
+    if (found && value && !slot(card, "eval").querySelector("a")) {
       value.textContent = describe(found);
       value.classList.add("is-live");
       const source = document.createElement("a");

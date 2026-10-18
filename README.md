@@ -10,7 +10,10 @@ Plain HTML, CSS and JavaScript: no framework, no build step, hosted on GitHub Pa
 - **The HTML is the data.** Skills are `<li data-skill="rag">` items in the skills panel. Each evidence card is an `<article data-evidence data-kind="line|project">` that lists its skills as `<li data-tag="rag">`. Without JavaScript the page reads as a plain resume; `assets/js/evidence-map.js` turns those lists into toggle buttons and draws the connectors.
 - **Skills no single resume line names** (for example LangGraph, listed in the resume's skills row K2) carry `data-listed="K2"`, and the map says so instead of inventing a link.
 - **Deep links:** `?skill=rag` or `?line=E3` opens the map with that selection. `?theme=dark` or `?theme=light` forces a theme.
-- **Project board** (`assets/js/project-board.js`), per card with `data-repo`:
+- **Projects keep themselves current.** `data/projects.json` lists the projects. A daily Action (`.github/workflows/sync.yml`) runs `scripts/sync.mjs`, which reads each project's repo and rewrites the project cards between the `<!-- sync:… -->` markers in `index.html`. It opens a PR and merges it only when something changed, after `check_site.py` and the tests pass. The profile README (`Varun-Kambali/Varun-Kambali`) runs the same script on its own projects table.
+  - A project repo can carry a **`portfolio.json`** (`title`, `tagline`, `summary`, `measures`, `skills`, `status`, `evalRow`, `demo`) to update its own card without touching this repo. A new public repo with the topic **`portfolio`** and a `portfolio.json` that has an `id` joins the board by itself.
+  - A release `v1.0.0` or later marks a project **Shipped**. The headline eval is the first data row of its `evals/results/summary.md`.
+- **Live layer** (`assets/js/project-board.js`): the page also refreshes these slots in the browser, per card with `data-repo`, so they stay fresh between syncs:
 
   | Slot | Source |
   |---|---|
@@ -22,7 +25,8 @@ Plain HTML, CSS and JavaScript: no framework, no build step, hosted on GitHub Pa
   Everything is written as text, never as HTML. If GitHub doesn't answer, the card keeps its static text ("Not public yet", "Not run yet"), which is always true.
 
 ## Common changes
-- **A project ships:** in the project repo, make `evals/results/summary.md` start with the README template's results table (`Metric | Baseline | This project | How measured`), with the headline metric in the first row. Then, here, update the card's pill and text if needed, add `data-demo` once there's a demo, and open a PR.
+- **A project ships:** nothing to edit here. In the project repo, keep `portfolio.json` current, put the headline metric in the first row of `evals/results/summary.md` (`Metric | Baseline | This project | How measured`), set the repo's homepage to the demo URL, and tag `v1.0.0`. The next daily sync (or a manual run of the `sync` workflow) updates the site and the profile README.
+- **Run the sync by hand:** `node scripts/sync.mjs --site index.html` (add `--readme <path>` for the profile README). With `GITHUB_TOKEN` set, it gets a higher API rate limit.
 - **A new resume line:** add an `<article data-evidence data-kind="line">` with the line's ID, the text exactly as on the resume, its metrics and its `data-tag` list. If it is the first line to use a skill marked `data-listed`, remove that attribute (the check enforces this).
 - **A new skill:** add `<li data-skill="id">Label</li>` to the right group in the skills panel and tag the cards that use it.
 
@@ -36,7 +40,7 @@ Then open http://localhost:8765/.
 | Check | Command |
 |---|---|
 | Evidence map integrity and public safety (no unknown or orphaned skills, every in-page link resolves, https only, no phone numbers) | `python3 scripts/check_site.py` |
-| Unit tests for the eval summary parser | `node --test "tests/*.test.js"` |
+| Unit tests for the eval summary parser and the project sync | `node --test "tests/*.test.js"` |
 | HTML validation | `npx html-validate@11.16.4 "*.html"` |
 | Accessibility, WCAG 2 AA with axe and HTML_CodeSniffer, light and dark, desktop and phone | `npx pa11y-ci@5.0.0 --config .pa11yci.json` (with the local server running) |
 | Secrets scan | gitleaks |
@@ -53,6 +57,8 @@ assets/js/evidence-map.js   selection, connectors, deep links
 assets/js/project-board.js  live repo, demo, status and eval slots
 assets/js/summary.js        parser for evals/results/summary.md
 assets/js/theme.js          auto, light or dark theme toggle
+data/projects.json          the projects on the board (P1, P2, …)
+scripts/sync.mjs            daily project sync for the site and the profile README
 scripts/check_site.py       integrity and public-safety check
 tests/                      node --test unit tests
 design-system/              design system (MASTER.md)
