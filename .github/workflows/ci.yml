@@ -14,12 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
 
       - name: Evidence map and public-safety checks
         run: python3 scripts/check_site.py
+
+      - name: No emoji or attribution lines in public text, PR text or commits
+        run: |
+          COMMITS="$(git log --format=%B ${{ github.event.pull_request.base.sha || 'HEAD~1' }}..HEAD 2>/dev/null || true)" \
+            python3 scripts/check_public_text.py index.html README.md design-system/varun-kambali-portfolio/MASTER.md
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
 
       - name: Unit tests (eval summary parser)
         run: node --test "tests/*.test.js"

@@ -93,7 +93,8 @@ test("the README table follows the projects", async () => {
   const out = renderReadme(md, projects, "2026-11-02");
   assert.match(out, /\| P1 \| \*\*\[Nutrition MCP server\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\)\*\* \|/);
   assert.match(out, /\[Calorie MAPE: 31\.2% → 6\.4%\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md\)/);
-  assert.match(out, /\| P2 \| \*\*Meal-planner multi-agent\*\* \|.*⚪ Next \| Not run yet \|/);
+  assert.match(out, /\| P2 \| \*\*Meal-planner multi-agent\*\* \|.* Next \| Not run yet \|/);
+  assert.doesNotMatch(out, /\p{Extended_Pictographic}/u, "no emoji in the README table");
   assert.match(out, /2 Nov 2026/);
 });
 
