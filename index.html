@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Varun Kambali · AI Engineer</title>
+  <meta name="description" content="Varun Kambali, AI Engineer in Bengaluru: production RAG, AI agents and LLM evaluation on Google Cloud. An evidence map links every skill to the work behind it.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Varun Kambali · AI Engineer">
+  <meta property="og:description" content="Production RAG, AI agents and LLM evaluation. Every skill links to the work that proves it.">
+  <meta property="og:url" content="https://varun-kambali.github.io/">
+  <link rel="canonical" href="https://varun-kambali.github.io/">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <script>
+    (function () {
+      var t = null;
+      try { t = new URLSearchParams(location.search).get("theme") || localStorage.getItem("theme"); } catch (e) { t = null; }
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/theme.js" defer></script>
+  <script src="assets/js/evidence-map.js" defer></script>
+  <script src="assets/js/project-board.js" type="module"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="site-header__name" href="#top">Varun Kambali</a>
+      <nav aria-label="Sections">
+        <ul class="site-nav">
+          <li><a href="#evidence">Evidence</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#credentials">Credentials</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <button type="button" class="btn theme-toggle" data-theme-toggle hidden>Theme: auto</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap" id="top" aria-labelledby="name">
+      <p class="eyebrow">Engineer report · updated October 2026</p>
+      <h1 id="name">Varun Kambali</h1>
+      <p class="hero__headline">AI Engineer · Production RAG, AI Agents &amp; LLM Evaluation</p>
+      <p class="hero__summary"><span class="id-chip" title="Resume line S1">S1</span> AI Engineer with 3+ years shipping production LLM systems on Google Cloud (retrieval-augmented generation, agents, search) for enterprise clients in SaaS, legal and travel. Built an agentic NL2SQL engine at <span class="num">92%</span> execution accuracy across <span class="num">20</span> markets, a multi-tenant RAG platform with citation verification, and hybrid search over <span class="num">10M+</span> multimodal assets.</p>
+
+      <dl class="report-summary">
+        <div><dt>Role</dt><dd>Senior AI Engineer, Searce Inc (formerly Cloudside Technologies)</dd></div>
+        <div><dt>Experience</dt><dd><span class="num">3+</span> years, all in production ML and GenAI (Oct 2023 – present)</dd></div>
+        <div><dt>Domains</dt><dd>Enterprise clients in SaaS, legal and travel, on Google Cloud</dd></div>
+        <div><dt>Building now</dt><dd><a href="#P1">P1 Nutrition MCP server</a>, in public</dd></div>
+        <div><dt>Certified</dt><dd><a href="#credentials">Google Cloud PMLE and PDE, two Gemini Enterprise specialisations, Anthropic CCA-F</a></dd></div>
+        <div><dt>Based in</dt><dd>Bengaluru, India</dd></div>
+      </dl>
+
+      <ul class="link-row">
+        <li><a href="https://github.com/Varun-Kambali">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/varunkambali">LinkedIn</a></li>
+        <li><a href="mailto:kambalivarun@gmail.com">kambalivarun@gmail.com</a></li>
+      </ul>
+    </section>
+
+    <section class="section wrap" id="evidence" aria-labelledby="evidence-title">
+      <header class="section__head">
+        <h2 id="evidence-title">Evidence map</h2>
+        <p class="section__lead">Pick a skill to see the resume lines and projects that back it. Pick a line to see the skills it used. The IDs match my resume. Client work is under NDA, so it is described at the same level of detail as the resume.</p>
+      </header>
+
+      <div class="map" data-map>
+        <div class="map__skills" id="skills">
+          <div class="map__status" data-map-status-bar>
+            <p class="map__status-text" data-map-status aria-live="polite">Select a skill or a resume line.</p>
+            <button type="button" class="btn btn--small" data-map-clear hidden>Clear</button>
+          </div>
+
+          <div class="skill-group">
+            <h3><span class="id-chip">K1</span> Languages &amp; backend</h3>
+            <ul class="skills">
+              <li data-skill="python">Python</li>
+              <li data-skill="sql">SQL</li>
+              <li data-skill="fastapi">FastAPI</li>
+              <li data-skill="rest" data-listed="K1">REST APIs</li>
+              <li data-skill="sse" data-listed="K1">SSE streaming</li>
+              <li data-skill="docker" data-listed="K1">Docker</li>
+              <li data-skill="git" data-listed="K1">Git</li>
+              <li data-skill="cicd" data-listed="K1">CI/CD</li>
+              <li data-skill="streamlit">Streamlit</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3><span class="id-chip">K2</span> LLMs &amp; agents</h3>
+            <ul class="skills">
+              <li data-skill="rag">RAG</li>
+              <li data-skill="agents">Agent pipelines</li>
+              <li data-skill="nl2sql">NL2SQL</li>
+              <li data-skill="citations">Citation verification</li>
+              <li data-skill="structured">Structured outputs</li>
+              <li data-skill="multimodal">Multimodal (OCR, audio, video)</li>
+              <li data-skill="embeddings">Embeddings</li>
+              <li data-skill="gemini">Gemini</li>
+              <li data-skill="imagen">Imagen 2</li>
+              <li data-skill="claude" data-listed="K2">Claude</li>
+              <li data-skill="langgraph" data-listed="K2">LangGraph</li>
+              <li data-skill="adk" data-listed="K2">Google ADK</li>
+              <li data-skill="llamaindex" data-listed="K2">LlamaIndex</li>
+              <li data-skill="litellm">LiteLLM</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3><span class="id-chip">K3</span> Retrieval &amp; data</h3>
+            <ul class="skills">
+              <li data-skill="hybrid">Hybrid search (HNSW, RRF)</li>
+              <li data-skill="vector-search">Vector search</li>
+              <li data-skill="chunking">Chunking strategies</li>
+              <li data-skill="postgres">PostgreSQL</li>
+              <li data-skill="pgvector">PGVector</li>
+              <li data-skill="bigquery">BigQuery</li>
+              <li data-skill="data-pipelines">Data pipelines</li>
+              <li data-skill="vvs" data-listed="K3">Vertex AI Vector Search</li>
+              <li data-skill="faiss" data-listed="K3">FAISS</li>
+              <li data-skill="neo4j" data-listed="K3">Neo4j</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3><span class="id-chip">K4</span> Evaluation</h3>
+            <ul class="skills">
+              <li data-skill="judge">LLM-as-judge</li>
+              <li data-skill="benchmarking">Model benchmarking (quality, latency, cost)</li>
+              <li data-skill="evalsets">Eval datasets</li>
+              <li data-skill="langsmith" data-listed="K4">LangSmith tracing</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3><span class="id-chip">K5</span> Google Cloud</h3>
+            <ul class="skills">
+              <li data-skill="vertex">Vertex AI</li>
+              <li data-skill="vpipelines">Vertex AI Pipelines</li>
+              <li data-skill="gemini-ent">Gemini Enterprise</li>
+              <li data-skill="cloudrun">Cloud Run</li>
+              <li data-skill="cloudfunctions">Cloud Functions</li>
+              <li data-skill="pubsub">Pub/Sub</li>
+              <li data-skill="event-driven">Event-driven pipelines</li>
+              <li data-skill="cloudsql" data-listed="K5">Cloud SQL</li>
+            </ul>
+          </div>
+
+          <div class="skill-group">
+            <h3>From the work</h3>
+            <ul class="skills">
+              <li data-skill="multitenant">Multi-tenant architecture</li>
+              <li data-skill="azuread">Azure AD SSO</li>
+              <li data-skill="classical-ml">Classical ML (Isolation Forest, Random Forest)</li>
+              <li data-skill="leadership">Technical leadership</li>
+              <li data-skill="client">Client discovery and solution design</li>
+            </ul>
+          </div>
+
+          <div class="skill-group skill-group--building">
+            <h3>Building now, in the projects below</h3>
+            <ul class="skills">
+              <li data-skill="mcp">MCP servers</li>
+              <li data-skill="ci-evals">Evals in CI</li>
+              <li data-skill="observability">LLM observability (Langfuse)</li>
+              <li data-skill="frontend">Frontend and deployment</li>
+              <li data-skill="finetune">Fine-tuning (LoRA)</li>
+              <li data-skill="openweight">Open-weight models</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="map__evidence">
+          <section class="role" data-role-group aria-labelledby="role-searce">
+            <header class="role__head">
+              <h3 id="role-searce">Senior AI Engineer · Searce Inc</h3>
+              <p class="meta">Formerly Cloudside Technologies, acquired Mar 2026 · Apr 2026 – present · Bengaluru</p>
+            </header>
+
+            <article class="card" id="E1" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E1</span>
+                <h4 class="card__title">Agentic NL2SQL</h4>
+              </header>
+              <p>Built an NL2SQL + vector-search reporting agent for executive leadership in 20 markets; a self-correcting loop validates and repairs SQL before execution, reaching 92% execution accuracy on 500+ evaluation questions.</p>
+              <ul class="metrics">
+                <li><span class="num">92%</span> execution accuracy</li>
+                <li><span class="num">500+</span> evaluation questions</li>
+                <li><span class="num">20</span> markets</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>Question</li>
+                  <li>Generate SQL</li>
+                  <li>Validate</li>
+                  <li>Execute</li>
+                </ol>
+                <p class="stages__loop">Loop: if validation fails, repair the SQL and validate again.</p>
+                <p class="stages__note">Stage names only. The client system is under NDA.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="nl2sql">NL2SQL</li>
+                <li data-tag="agents">Agent pipelines</li>
+                <li data-tag="vector-search">Vector search</li>
+                <li data-tag="sql">SQL</li>
+                <li data-tag="evalsets">Eval datasets</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E2" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E2</span>
+                <h4 class="card__title">Config-driven ingestion</h4>
+              </header>
+              <p>Designed a declarative, partitioned BigQuery ingestion engine across the same 20 markets, cutting new-market onboarding from multi-day code deployments to a config change applied in under 1 minute.</p>
+              <ul class="metrics">
+                <li><span class="num">&lt; 1 min</span> new-market onboarding, down from multi-day deployments</li>
+                <li><span class="num">20</span> markets</li>
+              </ul>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="bigquery">BigQuery</li>
+                <li data-tag="data-pipelines">Data pipelines</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E3" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E3</span>
+                <h4 class="card__title">Multi-tenant RAG</h4>
+              </header>
+              <p>Architected a FastAPI + PostgreSQL platform with Azure AD SSO and a 4-stage agent pipeline (routing, datastore selection, grounded synthesis, citation verification), cutting tenant onboarding from 1–2 days to under 5 minutes.</p>
+              <ul class="metrics">
+                <li><span class="num">&lt; 5 min</span> tenant onboarding, down from 1–2 days</li>
+                <li><span class="num">4</span>-stage agent pipeline</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>Routing</li>
+                  <li>Datastore selection</li>
+                  <li>Grounded synthesis</li>
+                  <li>Citation verification</li>
+                </ol>
+                <p class="stages__note">Stage names only. The client system is under NDA.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="rag">RAG</li>
+                <li data-tag="agents">Agent pipelines</li>
+                <li data-tag="citations">Citation verification</li>
+                <li data-tag="fastapi">FastAPI</li>
+                <li data-tag="postgres">PostgreSQL</li>
+                <li data-tag="azuread">Azure AD SSO</li>
+                <li data-tag="multitenant">Multi-tenant architecture</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E4" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E4</span>
+                <h4 class="card__title">Long-document indexing</h4>
+              </header>
+              <p>Built a Cloud Run indexing service that processed 10K+ enterprise documents, with chapter-aware chunking for 1,000+ page technical manuals and fuzzy metadata extraction to reduce manual data preparation.</p>
+              <ul class="metrics">
+                <li><span class="num">10K+</span> enterprise documents</li>
+                <li><span class="num">1,000+</span> page manuals</li>
+              </ul>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="chunking">Chunking strategies</li>
+                <li data-tag="cloudrun">Cloud Run</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="role" data-role-group aria-labelledby="role-cloudside-sr">
+            <header class="role__head">
+              <h3 id="role-cloudside-sr">Senior Machine Learning Engineer · Cloudside Technologies</h3>
+              <p class="meta">Apr 2024 – Mar 2026 · Bengaluru</p>
+            </header>
+
+            <article class="card" id="E5" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E5</span>
+                <h4 class="card__title">Hybrid search over 10M+ assets</h4>
+              </header>
+              <p>Led 3 engineers building search for a screen-capture SaaS; migrated to PostgreSQL/PGVector with keyword-weighted hybrid ranking (HNSW + weighted RRF).</p>
+              <ul class="metrics">
+                <li><span class="num">10M+</span> user assets: screenshots, audio, video, files</li>
+                <li><span class="num">3</span> engineers led</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>Query</li>
+                  <li>HNSW vector search + keyword search</li>
+                  <li>Weighted RRF</li>
+                  <li>Ranked results</li>
+                </ol>
+                <p class="stages__note">Stage names only. The client system is under NDA.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="hybrid">Hybrid search (HNSW, RRF)</li>
+                <li data-tag="vector-search">Vector search</li>
+                <li data-tag="pgvector">PGVector</li>
+                <li data-tag="postgres">PostgreSQL</li>
+                <li data-tag="leadership">Technical leadership</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E6" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E6</span>
+                <h4 class="card__title">Multimodal enrichment</h4>
+              </header>
+              <p>Built the event-driven Gemini pipeline behind that search (Pub/Sub, Cloud Functions, BigQuery), processing 2M+ captures/month with OCR, diarized transcription and metadata extraction for screenshots, audio and video.</p>
+              <ul class="metrics">
+                <li><span class="num">2M+</span> captures/month</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>New capture</li>
+                  <li>Pub/Sub</li>
+                  <li>Cloud Functions</li>
+                  <li>Gemini: OCR, diarized transcription, metadata</li>
+                  <li>BigQuery</li>
+                </ol>
+                <p class="stages__note">Stage names only. The client system is under NDA.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="multimodal">Multimodal (OCR, audio, video)</li>
+                <li data-tag="gemini">Gemini</li>
+                <li data-tag="event-driven">Event-driven pipelines</li>
+                <li data-tag="pubsub">Pub/Sub</li>
+                <li data-tag="cloudfunctions">Cloud Functions</li>
+                <li data-tag="bigquery">BigQuery</li>
+                <li data-tag="data-pipelines">Data pipelines</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E7" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E7</span>
+                <h4 class="card__title">LLM evaluation platform</h4>
+              </header>
+              <p>Built an async Python tool (Streamlit, LiteLLM) that benchmarks 5+ models in parallel with a Gemini Flash LLM-as-judge on 4 criteria plus latency and token cost; became the AI team’s standard for model selection.</p>
+              <ul class="metrics">
+                <li><span class="num">5+</span> models in parallel</li>
+                <li><span class="num">4</span> judge criteria, plus latency and token cost</li>
+                <li>The AI team’s standard for model selection</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>Same prompts</li>
+                  <li>5+ models in parallel (LiteLLM)</li>
+                  <li>Gemini Flash judge on 4 criteria, plus latency and token cost</li>
+                  <li>Side-by-side comparison (Streamlit)</li>
+                </ol>
+                <p class="stages__note">Stage names only. The tool is internal.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="judge">LLM-as-judge</li>
+                <li data-tag="benchmarking">Model benchmarking</li>
+                <li data-tag="litellm">LiteLLM</li>
+                <li data-tag="gemini">Gemini</li>
+                <li data-tag="streamlit">Streamlit</li>
+                <li data-tag="python">Python</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E8" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E8</span>
+                <h4 class="card__title">Gemini Enterprise</h4>
+              </header>
+              <p>Led discovery, design and delivery of an MVP with 1st/3rd-party connectors and a custom BigQuery natural-language analytics agent over 10 datasets (100+ tables); converted into a production engagement.</p>
+              <ul class="metrics">
+                <li><span class="num">10</span> datasets, <span class="num">100+</span> tables</li>
+                <li>MVP converted into a production engagement</li>
+              </ul>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="gemini-ent">Gemini Enterprise</li>
+                <li data-tag="agents">Agent pipelines</li>
+                <li data-tag="bigquery">BigQuery</li>
+                <li data-tag="client">Client discovery and solution design</li>
+                <li data-tag="leadership">Technical leadership</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E9" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E9</span>
+                <h4 class="card__title">Anomaly detection (classical ML)</h4>
+              </header>
+              <p>Built NetFlow anomaly detection on Vertex AI Pipelines over 300M+ records using distributed Isolation Forests with Random Forest surrogates for per-alert explainability, reducing false-positive alerts.</p>
+              <ul class="metrics">
+                <li><span class="num">300M+</span> records</li>
+              </ul>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="classical-ml">Classical ML</li>
+                <li data-tag="vpipelines">Vertex AI Pipelines</li>
+                <li data-tag="vertex">Vertex AI</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="role" data-role-group aria-labelledby="role-cloudside">
+            <header class="role__head">
+              <h3 id="role-cloudside">Machine Learning Engineer · Cloudside Technologies</h3>
+              <p class="meta">Oct 2023 – Mar 2024 · Bengaluru</p>
+            </header>
+
+            <article class="card" id="E10a" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E10a</span>
+                <h4 class="card__title">Logo generation pipeline</h4>
+              </header>
+              <p>Shipped a logo pipeline: Gemini structured-JSON prompt decomposition, Imagen 2 batch generation and a multimodal quality filter, producing 500+ logos/day.</p>
+              <ul class="metrics">
+                <li><span class="num">500+</span> logos/day</li>
+              </ul>
+              <details class="how">
+                <summary>How it works</summary>
+                <ol class="stages">
+                  <li>Gemini: prompt into structured JSON</li>
+                  <li>Imagen 2 batch generation</li>
+                  <li>Multimodal quality filter</li>
+                </ol>
+                <p class="stages__note">Stage names only. The client system is under NDA.</p>
+              </details>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="gemini">Gemini</li>
+                <li data-tag="structured">Structured outputs</li>
+                <li data-tag="imagen">Imagen 2</li>
+                <li data-tag="multimodal">Multimodal</li>
+              </ul>
+            </article>
+
+            <article class="card" id="E10b" data-evidence data-kind="line">
+              <header class="card__head">
+                <span class="id-chip">E10b</span>
+                <h4 class="card__title">Recruitment evaluation platform</h4>
+              </header>
+              <p>Shipped a recruitment platform with adaptive questionnaires, video behavioural analysis and embedding-based candidate–role matching, across 200+ candidate assessments.</p>
+              <ul class="metrics">
+                <li><span class="num">200+</span> candidate assessments</li>
+              </ul>
+              <ul class="tags" aria-label="Skills used">
+                <li data-tag="embeddings">Embeddings</li>
+                <li data-tag="multimodal">Multimodal</li>
+              </ul>
+            </article>
+          </section>
+
+          <section class="role" data-role-group aria-labelledby="role-projects">
+            <header class="role__head">
+              <h3 id="role-projects">Public projects · building now</h3>
+              <p class="meta">Open source, so the code can be read. Details and live status in <a href="#projects">Projects</a>.</p>
+            </header>
+
+            <article class="card card--project" id="map-P1" data-evidence data-kind="project">
+              <header class="card__head">
+                <span class="id-chip">P1</span>
+                <h4 class="card__title">Nutrition MCP server</h4>
+                <span class="pill" data-status="progress">In progress</span>
+              </header>
+              <p>MCP tools that give AI assistants sourced, unit-correct nutrition data, measured with and without the tools.</p>
+              <ul class="tags" aria-label="Skills it will show">
+                <li data-tag="mcp">MCP servers</li>
+                <li data-tag="ci-evals">Evals in CI</li>
+                <li data-tag="evalsets">Eval datasets</li>
+                <li data-tag="structured">Structured outputs</li>
+                <li data-tag="python">Python</li>
+                <li data-tag="cicd">CI/CD</li>
+              </ul>
+            </article>
+
+            <article class="card card--project" id="map-P2" data-evidence data-kind="project">
+              <header class="card__head">
+                <span class="id-chip">P2</span>
+                <h4 class="card__title">Meal-planner multi-agent</h4>
+                <span class="pill" data-status="next">Next</span>
+              </header>
+              <p>LangGraph agents plan a week of meals within hard limits, checked in code, traced, and gated by evals in CI.</p>
+              <ul class="tags" aria-label="Skills it will show">
+                <li data-tag="agents">Agent pipelines</li>
+                <li data-tag="langgraph">LangGraph</li>
+                <li data-tag="mcp">MCP servers</li>
+                <li data-tag="ci-evals">Evals in CI</li>
+                <li data-tag="observability">LLM observability</li>
+                <li data-tag="frontend">Frontend and deployment</li>
+                <li data-tag="fastapi">FastAPI</li>
+                <li data-tag="litellm">LiteLLM</li>
+                <li data-tag="docker">Docker</li>
+                <li data-tag="cicd">CI/CD</li>
+              </ul>
+            </article>
+
+            <article class="card card--project" id="map-P3" data-evidence data-kind="project">
+              <header class="card__head">
+                <span class="id-chip">P3</span>
+                <h4 class="card__title">Household docs vault</h4>
+                <span class="pill" data-status="planned">Planned</span>
+              </header>
+              <p>Private document AI that runs locally: field extraction, expiry reminders and cited answers, on a LoRA-fine-tuned open-weight model.</p>
+              <ul class="tags" aria-label="Skills it will show">
+                <li data-tag="finetune">Fine-tuning (LoRA)</li>
+                <li data-tag="openweight">Open-weight models</li>
+                <li data-tag="rag">RAG</li>
+                <li data-tag="citations">Citation verification</li>
+                <li data-tag="structured">Structured outputs</li>
+                <li data-tag="fastapi">FastAPI</li>
+                <li data-tag="docker">Docker</li>
+                <li data-tag="frontend">Frontend and deployment</li>
+              </ul>
+            </article>
+          </section>
+        </div>
+
+        <svg class="map__connectors" data-connectors aria-hidden="true" focusable="false"></svg>
+      </div>
+    </section>
+
+    <section class="section wrap" id="projects" aria-labelledby="projects-title">
+      <header class="section__head">
+        <h2 id="projects-title">Projects</h2>
+        <p class="section__lead">My client work is under NDA, so these open-source repos are the code you can read. Each card reads its repo, demo and headline eval result from GitHub as the project ships. Until a result is committed, the card says so.</p>
+      </header>
+
+      <div class="projects">
+        <article class="project" id="P1" data-project data-repo="nutrition-mcp">
+          <header class="project__head">
+            <span class="id-chip">P1</span>
+            <h3>Nutrition MCP server</h3>
+            <span class="pill" data-status="progress" data-pill>In progress</span>
+          </header>
+          <p>Ask an assistant how much protein is in 2 rotis and a katori of dal and it guesses, often wrongly, and Indian foods are poorly covered by Western databases. This open-source MCP server gives any MCP-capable assistant or agent sourced, unit-correct nutrition data instead.</p>
+          <dl class="slots">
+            <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
+            <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
+            <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Calorie and protein error, with vs without the tools</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
+          </dl>
+        </article>
+
+        <article class="project" id="P2" data-project data-repo="meal-planner-agents">
+          <header class="project__head">
+            <span class="id-chip">P2</span>
+            <h3>Meal-planner multi-agent</h3>
+            <span class="pill" data-status="next" data-pill>Next</span>
+          </header>
+          <p>Planning a week of meals that hits calorie and protein targets, follows diet rules and allergies, and fits a budget takes hours, and LLM-only planners break those limits silently. LangGraph agents draft, verify (macros computed in code through P1 over MCP), critique and repair the plan, with Langfuse traces and evals that gate CI.</p>
+          <dl class="slots">
+            <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
+            <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
+            <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Hard-constraint pass rate, single call vs agent pipeline</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
+          </dl>
+        </article>
+
+        <article class="project" id="P3" data-project data-repo="household-docs-vault">
+          <header class="project__head">
+            <span class="id-chip">P3</span>
+            <h3>Household docs vault</h3>
+            <span class="pill" data-status="planned" data-pill>Planned</span>
+          </header>
+          <p>Bills, warranties and insurance policies end up scattered, renewals get missed, and people won’t upload these papers to a cloud LLM. This vault extracts fields, reminds before expiry dates and answers questions with citations, running locally on a small open-weight model fine-tuned with LoRA.</p>
+          <dl class="slots">
+            <div><dt>Repo</dt><dd data-slot="repo">Not public yet</dd></div>
+            <div><dt>Demo</dt><dd data-slot="demo">Not live yet</dd></div>
+            <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">Field-level F1, fine-tuned model vs Gemini Flash</span> <span class="slot__value" data-slot-value>Not run yet</span></dd></div>
+            <div><dt>Last push</dt><dd data-slot="updated">Not yet</dd></div>
+          </dl>
+        </article>
+      </div>
+      <p class="fineprint" data-board-note>Repo, demo, last push and eval result come from the GitHub API and each repo’s <code>evals/results/summary.md</code> when the page loads.</p>
+    </section>
+
+    <section class="section wrap" id="credentials" aria-labelledby="credentials-title">
+      <header class="section__head">
+        <h2 id="credentials-title">Credentials</h2>
+      </header>
+      <div class="credentials">
+        <div>
+          <h3><span class="id-chip">C1</span> Certifications</h3>
+          <ul class="cert-list">
+            <li><a href="https://www.credly.com/badges/fc7321c1-5f35-4efa-bbdc-9a7fc50a396c/public_url">Google Cloud Professional Machine Learning Engineer</a></li>
+            <li><a href="https://www.credly.com/badges/f01c5619-78fe-4579-b777-d2562682709d/public_url">Google Cloud Professional Data Engineer</a></li>
+            <li><a href="https://www.credly.com/badges/f5f99e6d-0f08-45de-b012-68b6bdfeef9e/public_url">Google Cloud Partner Specialist: Gemini Enterprise Deployment</a></li>
+            <li><a href="https://www.credly.com/badges/9c00a470-a883-4dbb-b8cf-a7c9ab90938d/public_url">Google Cloud Partner Specialist: Gemini Enterprise Agent Development</a></li>
+            <li><a href="https://www.credly.com/badges/3fbe6b0c-df1b-4581-9262-d668d5edcb5f/public_url">Anthropic: Claude Certified Architect – Foundations</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3><span class="id-chip">ED1</span> Education</h3>
+          <p><strong>Bachelor of Engineering, Computer Science</strong><br>Kammavari Sangha Institute of Technology (KSIT), Bengaluru · Aug 2019 – Sep 2023</p>
+          <p>1st place, National Conference Project Exhibition (<span class="num">100+</span> teams), for an AI-based food adulteration detection and sorting system.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="contact" aria-labelledby="contact-title">
+      <header class="section__head">
+        <h2 id="contact-title">Contact</h2>
+        <p class="section__lead">Email is the fastest way to reach me.</p>
+      </header>
+      <ul class="link-row link-row--large">
+        <li><a href="mailto:kambalivarun@gmail.com">kambalivarun@gmail.com</a></li>
+        <li><a href="https://www.linkedin.com/in/varunkambali">linkedin.com/in/varunkambali</a></li>
+        <li><a href="https://github.com/Varun-Kambali">github.com/Varun-Kambali</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Every number on this page is copied from my resume or from a committed eval results file. Plain HTML, CSS and JavaScript. <a href="https://github.com/Varun-Kambali/varun-kambali.github.io">Source on GitHub</a>.</p>
+    </div>
+  </footer>
+</body>
+</html>
