@@ -36,7 +36,7 @@ Then open http://localhost:8765/.
 | Check | Command |
 |---|---|
 | Evidence map integrity and public safety (no unknown or orphaned skills, every in-page link resolves, https only, no phone numbers) | `python3 scripts/check_site.py` |
-| Unit tests for the eval summary parser | `node --test tests/` |
+| Unit tests for the eval summary parser | `node --test "tests/*.test.js"` |
 | HTML validation | `npx html-validate@11.16.4 "*.html"` |
 | Accessibility, WCAG 2 AA with axe and HTML_CodeSniffer, light and dark, desktop and phone | `npx pa11y-ci@5.0.0 --config .pa11yci.json` (with the local server running) |
 | Secrets scan | gitleaks |

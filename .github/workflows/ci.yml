@@ -22,7 +22,7 @@ jobs:
         run: python3 scripts/check_site.py
 
       - name: Unit tests (eval summary parser)
-        run: node --test tests/
+        run: node --test "tests/*.test.js"
 
       - name: HTML validation
         run: npx --yes html-validate@11.16.4 "*.html"
