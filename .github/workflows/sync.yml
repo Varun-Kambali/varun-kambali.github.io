@@ -33,6 +33,7 @@ jobs:
       - name: Check the result before it can merge
         run: |
           python3 scripts/check_site.py
+          python3 scripts/check_public_text.py index.html "$RUNNER_TEMP/sync-report.md"
           node --test "tests/*.test.js"
 
       - name: Open and merge a pull request if anything changed

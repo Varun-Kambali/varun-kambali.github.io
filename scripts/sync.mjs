@@ -19,7 +19,7 @@ import { headline, describe, isV1OrLater } from "../assets/js/summary.js";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFEST_KEYS = ["title", "tagline", "summary", "measures", "skills", "status", "evalRow", "demo"];
 const STATUS_LABEL = { progress: "In progress", next: "Next", planned: "Planned", shipped: "Shipped" };
-const README_STATUS = { progress: "🟡 In progress", next: "⚪ Next", planned: "⚪ Planned", shipped: "🟢 Shipped" };
+const README_STATUS = { progress: "In progress", next: "Next", planned: "Planned", shipped: "Shipped" };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function parseArgs(argv) {
@@ -178,7 +178,7 @@ export function readmeTable(projects) {
     const name = p.live.url ? `**[${cell(p.title)}](${p.live.url})**` : `**${cell(p.title)}**`;
     const demo = p.live.demo ? ` · [demo](${p.live.demo})` : "";
     const result = p.live.headline ? `[${cell(p.live.headline)}](${p.live.results})` : "Not run yet";
-    const status = p.status === "shipped" && p.live.release ? `🟢 Shipped ${p.live.release}` : README_STATUS[p.status];
+    const status = p.status === "shipped" && p.live.release ? `Shipped ${p.live.release}` : README_STATUS[p.status];
     return `| ${p.id} | ${name}${demo} | ${cell(p.tagline)} | ${status} | ${result} |`;
   });
   return ["| | Project | What it is | Status | Headline result |", "|---|---|---|---|---|", ...rows].join("\n");
