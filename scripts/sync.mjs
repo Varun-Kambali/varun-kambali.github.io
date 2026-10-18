@@ -126,51 +126,39 @@ function statusLabel(p) {
   return p.status === "shipped" && p.live.release ? `Shipped ${p.live.release}` : STATUS_LABEL[p.status];
 }
 
-function pill(p, extra = "") {
-  return `<span class="pill" data-status="${p.status}"${extra}>${esc(statusLabel(p))}</span>`;
-}
-
-function mapCard(p, labels, warn) {
-  const tags = p.skills
+function skillTags(p, labels, warn, indent) {
+  return p.skills
     .filter((id) => labels.has(id) || (warn(`${p.id}: skill "${id}" has no chip on the site; left out`), false))
-    .map((id) => `                <li data-tag="${esc(id)}">${esc(labels.get(id))}</li>`)
+    .map((id) => `${indent}<li data-tag="${esc(id)}">${esc(labels.get(id))}</li>`)
     .join("\n");
-  return `            <article class="card card--project" id="map-${p.id}" data-evidence data-kind="project">
-              <header class="card__head">
-                <span class="id-chip">${p.id}</span>
-                <h4 class="card__title">${esc(p.title)}</h4>
-                ${pill(p)}
-              </header>
-              <p>${esc(p.tagline)}</p>
-              <ul class="tags" aria-label="Skills it shows">
-${tags}
-              </ul>
-            </article>`;
 }
 
-function boardCard(p, owner) {
+// One entry per project: it is both the project's card and its evidence on the map.
+function projectEntry(p, owner, labels, warn) {
   const repo = p.live.url ? `<a href="${esc(p.live.url)}">github.com/${owner}/${esc(p.repo)}</a>` : "Not public yet";
   const demo = p.live.demo
     ? `<a href="${esc(p.live.demo)}">${esc(p.live.demo.replace(/^https:\/\//, "").replace(/\/$/, ""))}</a>`
     : "Not live yet";
   const value = p.live.headline
     ? `<span class="slot__value is-live" data-slot-value>${esc(p.live.headline)}</span> <a href="${esc(p.live.results)}">results file</a>`
-    : `<span class="slot__value" data-slot-value>Not run yet</span>`;
+    : `<span class="slot__value" data-slot-value>not run yet</span>`;
   const attrs = `${p.evalRow ? ` data-eval-row="${esc(p.evalRow)}"` : ""}${p.demo ? ` data-demo="${esc(p.demo)}"` : ""}`;
-  return `        <article class="project" id="${p.id}" data-project data-repo="${esc(p.repo)}"${attrs}>
-          <header class="project__head">
-            <span class="id-chip">${p.id}</span>
-            <h3>${esc(p.title)}</h3>
-            ${pill(p, " data-pill")}
-          </header>
-          <p>${esc(p.summary)}</p>
-          <dl class="slots">
-            <div><dt>Repo</dt><dd data-slot="repo">${repo}</dd></div>
-            <div><dt>Demo</dt><dd data-slot="demo">${demo}</dd></div>
-            <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">${esc(p.measures)}</span> ${value}</dd></div>
-            <div><dt>Last push</dt><dd data-slot="updated">${p.live.url ? "See repo" : "Not yet"}</dd></div>
-          </dl>
-        </article>`;
+  return `          <article class="entry entry--project" id="${p.id}" data-evidence data-kind="project" data-project data-repo="${esc(p.repo)}"${attrs}>
+            <h3 class="entry__title"><span class="id-chip">${p.id}</span> ${esc(p.title)}</h3>
+            <p class="entry__status" data-pill data-status="${p.status}">${esc(statusLabel(p))}</p>
+            <p>${esc(p.summary)}</p>
+            <dl class="slots">
+              <div><dt>Repo</dt><dd data-slot="repo">${repo}</dd></div>
+              <div><dt>Demo</dt><dd data-slot="demo">${demo}</dd></div>
+              <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">${esc(p.measures)}:</span> ${value}</dd></div>
+              <div><dt>Last push</dt><dd data-slot="updated">${p.live.url ? "See repo" : "Not yet"}</dd></div>
+            </dl>
+            <div class="entry__skills">
+              <ul class="tags" aria-label="Skills it shows">
+${skillTags(p, labels, warn, "                ")}
+              </ul>
+            </div>
+          </article>`;
 }
 
 export function readmeTable(projects) {
@@ -205,19 +193,18 @@ export function skillLabels(html) {
   return labels;
 }
 
-// The strip under the hero: the project in progress, or else the next one.
-function nowStrip(projects) {
+// The "now building" line in About: the project in progress, or else the next one.
+function nowLine(projects) {
   const p = projects.find((x) => x.status === "progress") || projects.find((x) => x.status === "next");
   if (!p) return "";
-  const label = p.status === "progress" ? "Now building" : "Up next";
-  return `      <p class="now" data-now data-repo="${esc(p.repo)}"><span class="now__label">${label}</span> <a class="now__project" href="#${p.id}"><span class="id-chip">${p.id}</span> ${esc(p.title)}</a> <span class="now__commit" data-now-commit></span></p>`;
+  const lead = p.status === "progress" ? "Now building, in public" : "Up next, in public";
+  return `          <p class="now" data-now data-repo="${esc(p.repo)}">${lead}: <a href="#${p.id}">${esc(p.title)}</a>. <span class="now__commit" data-now-commit></span></p>`;
 }
 
 export function renderSite(html, projects, owner, today, warn = () => {}) {
   const labels = skillLabels(html);
-  let next = setSection(html, "map-projects", projects.map((p) => mapCard(p, labels, warn)).join("\n"));
-  next = setSection(next, "board", projects.map((p) => boardCard(p, owner)).join("\n"));
-  if (next.includes("<!-- sync:now:start -->")) next = setSection(next, "now", nowStrip(projects));
+  let next = setSection(html, "board", projects.map((p) => projectEntry(p, owner, labels, warn)).join("\n"));
+  if (next.includes("<!-- sync:now:start -->")) next = setSection(next, "now", nowLine(projects));
   return stamp(html, next, today);
 }
 

@@ -14,10 +14,10 @@
   const clearButton = map.querySelector("[data-map-clear]");
   const copyButton = map.querySelector("[data-map-copy]");
   const svg = map.querySelector("[data-connectors]");
-  const wide = window.matchMedia("(min-width: 960px)");
+  const wide = window.matchMedia("(min-width: 1024px)");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const SVG_NS = "http://www.w3.org/2000/svg";
-  const IDLE = "Select a skill, a resume line, a role or a lens.";
+  const IDLE = "Nothing highlighted yet.";
 
   const chips = new Map(); // skill id -> button
   const labels = new Map(); // skill id -> label
@@ -79,7 +79,7 @@
       });
     }
     skillsByCard.set(card, ids);
-    const title = card.querySelector(".card__title");
+    const title = card.querySelector(".entry__title");
     if (title) toggleButton(title).addEventListener("click", () => toggle("card", card.id));
   }
 
@@ -96,9 +96,8 @@
     const id = item.dataset.roleFilter;
     const section = map.querySelector(`[data-role-group][aria-labelledby="${id}"]`);
     if (!section) continue;
-    const button = toggleButton(item, "timeline__step");
-    const role = item.querySelector(".timeline__role");
-    roles.set(id, { button, label: role ? role.textContent.trim() : id, section });
+    const button = toggleButton(item);
+    roles.set(id, { button, label: button.textContent.trim().split(" · ")[0], section });
     button.addEventListener("click", () => {
       toggle("role", id);
       // A role's cards can sit far below the timeline, so bring them into view.
@@ -126,7 +125,7 @@
     for (const { button } of [...lenses.values(), ...roles.values()]) button.setAttribute("aria-pressed", "false");
     for (const card of cards) {
       card.classList.remove("is-match", "is-dim", "is-selected");
-      const titleButton = card.querySelector(".card__title button");
+      const titleButton = card.querySelector(".entry__title button");
       if (titleButton) titleButton.setAttribute("aria-pressed", "false");
       for (const b of card.querySelectorAll(".tags button")) b.classList.remove("is-active");
     }
@@ -171,9 +170,8 @@
       const ids = skillsByCard.get(card);
       highlight([card], ids, false);
       card.classList.add("is-selected");
-      card.querySelector(".card__title button")?.setAttribute("aria-pressed", "true");
-      const chipId = card.querySelector(".id-chip");
-      const name = `${chipId ? chipId.textContent + " " : ""}${card.querySelector(".card__title")?.textContent.trim() || id}`;
+      card.querySelector(".entry__title button")?.setAttribute("aria-pressed", "true");
+      const name = card.querySelector(".entry__title")?.textContent.trim().replace(/\s+/g, " ") || id;
       text = `${name} uses ${plural(ids.length, "skill", "skills")}: ${ids.map((i) => labels.get(i)).join(", ")}.`;
     } else if (kind === "lens") {
       const lens = lenses.get(id);
@@ -315,6 +313,16 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && state) clear();
   });
+
+  // On phones the full skills index starts folded, so the page opens on the person, not a list.
+  // On wide screens it is always open (its toggle is hidden there).
+  const index = document.querySelector("[data-skills-index]");
+  if (index) {
+    index.open = wide.matches;
+    wide.addEventListener("change", () => {
+      index.open = wide.matches;
+    });
+  }
 
   // Deep links: ?skill=rag, ?line=E3, ?lens=agents or ?role=role-searce
   const params = new URLSearchParams(window.location.search);
