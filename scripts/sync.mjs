@@ -9,6 +9,7 @@
 //   GET /repos/:owner/:repo                   public or not, homepage (demo), default branch
 //   GET /repos/:owner/:repo/releases/latest   a v1.0.0 or later release marks the project Shipped
 //   evals/results/summary.md                  the headline eval row (same parser as the browser)
+//   docs/case-study.md                        when present, linked as the project's case study (the why)
 // A file is rewritten only when a section's content changes, and its "last change" date moves
 // only then, so a quiet day produces no diff and no pull request.
 import { readFile, writeFile } from "node:fs/promises";
@@ -98,6 +99,9 @@ export async function collect(config, fetcher, warn = () => {}) {
       p.live.release = release.tag_name;
       if (isV1OrLater(release.tag_name)) p.status = "shipped";
     }
+    if (await fetcher.raw(owner, info.name, branch, "docs/case-study.md")) {
+      p.live.caseStudy = `${info.html_url}/blob/${branch}/docs/case-study.md`;
+    }
     const summary = await fetcher.raw(owner, info.name, branch, "evals/results/summary.md");
     const found = summary ? headline(summary, p.evalRow) : null;
     if (found) {
@@ -139,6 +143,7 @@ function projectEntry(p, owner, labels, warn) {
   const demo = p.live.demo
     ? `<a href="${esc(p.live.demo)}">${esc(p.live.demo.replace(/^https:\/\//, "").replace(/\/$/, ""))}</a>`
     : "Not live yet";
+  const caseStudy = p.live.caseStudy ? `<a href="${esc(p.live.caseStudy)}">Why I built it, and how</a>` : "Not written yet";
   const value = p.live.headline
     ? `<span class="slot__value is-live" data-slot-value>${esc(p.live.headline)}</span> <a href="${esc(p.live.results)}">results file</a>`
     : `<span class="slot__value" data-slot-value>not run yet</span>`;
@@ -150,6 +155,7 @@ function projectEntry(p, owner, labels, warn) {
             <dl class="slots">
               <div><dt>Repo</dt><dd data-slot="repo">${repo}</dd></div>
               <div><dt>Demo</dt><dd data-slot="demo">${demo}</dd></div>
+              <div><dt>Case study</dt><dd data-slot="case">${caseStudy}</dd></div>
               <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">${esc(p.measures)}:</span> ${value}</dd></div>
               <div><dt>Last push</dt><dd data-slot="updated">${p.live.url ? "See repo" : "Not yet"}</dd></div>
             </dl>
@@ -164,7 +170,7 @@ ${skillTags(p, labels, warn, "                ")}
 export function readmeTable(projects) {
   const rows = projects.map((p) => {
     const name = p.live.url ? `**[${cell(p.title)}](${p.live.url})**` : `**${cell(p.title)}**`;
-    const demo = p.live.demo ? ` · [demo](${p.live.demo})` : "";
+    const demo = `${p.live.caseStudy ? ` · [case study](${p.live.caseStudy})` : ""}${p.live.demo ? ` · [demo](${p.live.demo})` : ""}`;
     const result = p.live.headline ? `[${cell(p.live.headline)}](${p.live.results})` : "Not run yet";
     const status = p.status === "shipped" && p.live.release ? `Shipped ${p.live.release}` : README_STATUS[p.status];
     return `| ${p.id} | ${name}${demo} | ${cell(p.tagline)} | ${status} | ${result} |`;
