@@ -15,6 +15,7 @@ Plain HTML, CSS and JavaScript: no framework, no build step, hosted on GitHub Pa
 - **Projects keep themselves current.** `data/projects.json` lists the projects. A daily Action (`.github/workflows/sync.yml`) runs `scripts/sync.mjs`, which reads each project's repo and rewrites the project cards between the `<!-- sync:… -->` markers in `index.html`. It opens a PR and merges it only when something changed, after `check_site.py` and the tests pass. The profile README (`Varun-Kambali/Varun-Kambali`) runs the same script on its own projects table.
   - A project repo can carry a **`portfolio.json`** (`title`, `tagline`, `summary`, `measures`, `skills`, `status`, `evalRow`, `demo`) to update its own card without touching this repo. A new public repo with the topic **`portfolio`** and a `portfolio.json` that has an `id` joins the board by itself.
   - A release `v1.0.0` or later marks a project **Shipped**. The headline eval is the first data row of its `evals/results/summary.md`.
+  - If the repo has `docs/case-study.md` (what it is, why it was built, how and where it fits), the entry and the README table link it as the project's case study.
 - **Live layer** (`assets/js/project-board.js`): the page also refreshes these slots in the browser, per card with `data-repo`, so they stay fresh between syncs:
 
   | Slot | Source |

@@ -121,3 +121,17 @@ test("the now-building strip follows the project in progress, then the next one"
   const html = renderSite(site, shipped, "Varun-Kambali", "2026-11-01");
   assert.match(html, /<p class="now" data-now data-repo="meal-planner-agents">Up next, in public: <a href="#P2">Meal-planner multi-agent<\/a>\./);
 });
+
+test("a case study in the repo is linked from the site entry and the README table", async () => {
+  const projects = await collect(
+    config,
+    fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/docs/case-study.md": "# Case study: Nutrition MCP server" } }),
+  );
+  const url = "https://github.com/Varun-Kambali/nutrition-mcp/blob/main/docs/case-study.md";
+  assert.equal(projects[0].live.caseStudy, url);
+  const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
+  assert.match(html, /<dt>Case study<\/dt><dd data-slot="case"><a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md">Why I built it, and how<\/a><\/dd>/);
+  assert.match(html, /<dt>Case study<\/dt><dd data-slot="case">Not written yet<\/dd>/, "projects without one say so");
+  const md = "<!-- sync:projects:start -->\nold\n<!-- sync:projects:end -->\n<!-- sync:stamp:start -->1 Oct 2026<!-- sync:stamp:end -->\n";
+  assert.match(renderReadme(md, projects, "2026-11-01"), /\*\*\[Nutrition MCP server\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\)\*\* · \[case study\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md\)/);
+});
