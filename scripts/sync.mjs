@@ -1,16 +1,19 @@
 #!/usr/bin/env node
-// Keeps the project cards on the site, and the projects table in the profile README,
+// Keeps the project entries on the site, and the projects section of the profile README,
 // in step with each project's GitHub repo. Runs daily in GitHub Actions (.github/workflows/sync.yml)
 // and by hand:  node scripts/sync.mjs --site index.html [--readme ../Varun-Kambali/README.md]
 //
 // Sources for every project in data/projects.json, plus any public repo tagged "portfolio"
 // that carries a portfolio.json with an "id":
-//   portfolio.json in the project repo        overrides title, tagline, summary, measures, skills, status, evalRow, demo
+//   data/projects.json "story" and "result"   the words shown, written by hand in first person
+//   portfolio.json in the project repo        overrides title, tagline, summary, story, result, measures,
+//                                             skills, status, evalRow, demo
 //   GET /repos/:owner/:repo                   public or not, homepage (demo), default branch
 //   GET /repos/:owner/:repo/releases/latest   a v1.0.0 or later release marks the project Shipped
-//   evals/results/summary.md                  the headline eval row (same parser as the browser)
+//   evals/results/summary.md                  every number in "result" must appear in it; if one doesn't,
+//                                             the result is left out and the headline row shown instead
 //   docs/case-study.md                        when present, linked as the project's case study (the why)
-// A file is rewritten only when a section's content changes, and its "last change" date moves
+// A file is rewritten only when a section's content changes, and its "last updated" date moves
 // only then, so a quiet day produces no diff and no pull request.
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
@@ -18,9 +21,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { headline, describe, isV1OrLater } from "../assets/js/summary.js";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const MANIFEST_KEYS = ["title", "tagline", "summary", "measures", "skills", "status", "evalRow", "demo"];
+const MANIFEST_KEYS = ["title", "tagline", "summary", "story", "result", "measures", "skills", "status", "evalRow", "demo"];
 const STATUS_LABEL = { progress: "In progress", next: "Next", planned: "Planned", shipped: "Shipped" };
-const README_STATUS = { progress: "In progress", next: "Next", planned: "Planned", shipped: "Shipped" };
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function parseArgs(argv) {
@@ -56,6 +58,17 @@ export function offlineFetcher(fixture) {
     api: async (path) => fixture.api?.[path] ?? null,
     raw: async (_owner, repo, branch, path) => fixture.raw?.[`${repo}/${branch}/${path}`] ?? null,
   };
+}
+
+// The numbers in a hand-written result sentence that the results file doesn't contain as a
+// whole number ("26" doesn't count as found inside "2026"). A re-run that changes a number
+// takes the sentence off the page until someone rewrites it.
+export function unbackedNumbers(sentence, summary) {
+  const numbers = sentence.match(/\d+(?:,\d{3})*(?:\.\d+)?/g) || [];
+  return [...new Set(numbers)].filter((n) => {
+    const pattern = new RegExp(`(?<![\\d.,])${n.replace(/[.,]/g, "\\$&")}(?![\\d]|[.,]\\d)`);
+    return !pattern.test(summary);
+  });
 }
 
 async function readManifest(fetcher, owner, info, warn) {
@@ -108,6 +121,11 @@ export async function collect(config, fetcher, warn = () => {}) {
       p.live.headline = describe(found);
       p.live.results = `${info.html_url}/blob/${branch}/evals/results/summary.md`;
     }
+    if (p.result && summary) {
+      const missing = unbackedNumbers(p.result, summary);
+      if (missing.length) warn(`${p.id}: result names ${missing.join(", ")}, which evals/results/summary.md no longer has; showing the results row instead`);
+      else p.live.result = p.result;
+    }
   }
 
   for (const p of projects) {
@@ -119,7 +137,6 @@ export async function collect(config, fetcher, warn = () => {}) {
 
 const esc = (s) =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const cell = (s) => String(s).replace(/\|/g, "\\|").replace(/\n/g, " ");
 
 export function formatDate(iso) {
   const [y, m, d] = iso.split("-").map(Number);
@@ -137,45 +154,72 @@ function skillTags(p, labels, warn, indent) {
     .join("\n");
 }
 
-// One entry per project: it is both the project's card and its evidence on the map.
-function projectEntry(p, owner, labels, warn) {
-  const repo = p.live.url ? `<a href="${esc(p.live.url)}">github.com/${owner}/${esc(p.repo)}</a>` : "Not public yet";
-  const demo = p.live.demo
-    ? `<a href="${esc(p.live.demo)}">${esc(p.live.demo.replace(/^https:\/\//, "").replace(/\/$/, ""))}</a>`
-    : "Not live yet";
-  const caseStudy = p.live.caseStudy ? `<a href="${esc(p.live.caseStudy)}">Why I built it, and how</a>` : "Not written yet";
-  const value = p.live.headline
-    ? `<span class="slot__value is-live" data-slot-value>${esc(p.live.headline)}</span> <a href="${esc(p.live.results)}">results file</a>`
-    : `<span class="slot__value" data-slot-value>not run yet</span>`;
-  const attrs = `${p.evalRow ? ` data-eval-row="${esc(p.evalRow)}"` : ""}${p.demo ? ` data-demo="${esc(p.demo)}"` : ""}`;
-  return `          <article class="entry entry--project" id="${p.id}" data-evidence data-kind="project" data-project data-repo="${esc(p.repo)}"${attrs}>
-            <h3 class="entry__title"><span class="id-chip">${p.id}</span> ${esc(p.title)}</h3>
-            <p class="entry__status" data-pill data-status="${p.status}">${esc(statusLabel(p))}</p>
-            <p>${esc(p.summary)}</p>
-            <dl class="slots">
-              <div><dt>Repo</dt><dd data-slot="repo">${repo}</dd></div>
-              <div><dt>Demo</dt><dd data-slot="demo">${demo}</dd></div>
-              <div><dt>Case study</dt><dd data-slot="case">${caseStudy}</dd></div>
-              <div><dt>Headline eval</dt><dd data-slot="eval"><span class="slot__what">${esc(p.measures)}:</span> ${value}</dd></div>
-              <div><dt>Last push</dt><dd data-slot="updated">${p.live.url ? "See repo" : "Not yet"}</dd></div>
-            </dl>
-            <div class="entry__skills">
-              <ul class="tags" aria-label="Skills it shows">
-${skillTags(p, labels, warn, "                ")}
-              </ul>
-            </div>
-          </article>`;
+// Links a reader can follow, in the order they'd want them. Empty until the repo is public.
+function links(p) {
+  if (!p.live.url) return [];
+  const out = [["Code", p.live.url]];
+  if (p.live.demo) out.push(["Live demo", p.live.demo]);
+  if (p.live.caseStudy) out.push(["Why I built it", p.live.caseStudy]);
+  if (p.live.results) out.push(["Eval results", p.live.results]);
+  return out;
 }
 
-export function readmeTable(projects) {
-  const rows = projects.map((p) => {
-    const name = p.live.url ? `**[${cell(p.title)}](${p.live.url})**` : `**${cell(p.title)}**`;
-    const demo = `${p.live.caseStudy ? ` · [case study](${p.live.caseStudy})` : ""}${p.live.demo ? ` · [demo](${p.live.demo})` : ""}`;
-    const result = p.live.headline ? `[${cell(p.live.headline)}](${p.live.results})` : "Not run yet";
-    const status = p.status === "shipped" && p.live.release ? `Shipped ${p.live.release}` : README_STATUS[p.status];
-    return `| ${p.id} | ${name}${demo} | ${cell(p.tagline)} | ${status} | ${result} |`;
+// The measured result: the hand-written sentence when the results file still backs every
+// number in it, else the results file's own headline row, else nothing.
+function resultText(p) {
+  if (p.live.result) return p.live.result;
+  if (p.live.headline) return `Latest eval: ${p.live.headline}.`;
+  return "";
+}
+
+const isActive = (p) => p.status === "shipped" || p.status === "progress";
+
+// One entry per project: it is both the project's card and its evidence on the map.
+function projectEntry(p, labels, warn) {
+  const result = resultText(p);
+  const linkList = links(p);
+  const attrs = `${p.evalRow ? ` data-eval-row="${esc(p.evalRow)}"` : ""}${p.demo ? ` data-demo="${esc(p.demo)}"` : ""}`;
+  const lines = [
+    `          <article class="entry entry--project" id="${p.id}" data-evidence data-kind="project" data-project data-repo="${esc(p.repo)}"${attrs}>`,
+    `            <h3 class="entry__title">${esc(p.title)}</h3>`,
+    `            <p class="entry__status" data-pill data-status="${p.status}">${esc(statusLabel(p))}</p>`,
+    `            <p>${esc(p.story || p.summary)}</p>`,
+  ];
+  if (result) lines.push(`            <p class="entry__result">${esc(result)}</p>`);
+  if (linkList.length) {
+    const anchors = linkList.map(([text, href]) => `<a href="${esc(href)}">${text}</a>`).join(" · ");
+    lines.push(`            <p class="entry__links">${anchors}</p>`);
+  }
+  lines.push(
+    `            <div class="entry__skills">`,
+    `              <ul class="tags" aria-label="Skills it shows">`,
+    skillTags(p, labels, warn, "                "),
+    `              </ul>`,
+    `            </div>`,
+    `          </article>`,
+  );
+  return lines.join("\n");
+}
+
+// The README section: a short first-person entry per shipped or active project, then one
+// line for what's coming. Plain Markdown, so it reads well on GitHub and in a text view.
+export function readmeProjects(projects) {
+  const blocks = projects.filter(isActive).map((p) => {
+    const title = p.live.url ? `[${p.title}](${p.live.url})` : p.title;
+    const status = statusLabel(p).replace(/^\w/, (c) => c.toLowerCase());
+    const parts = [`### ${title} · ${status}`, p.story || p.summary];
+    const result = resultText(p);
+    if (result) parts.push(result);
+    const linkList = links(p).slice(1);
+    if (linkList.length) parts.push(linkList.map(([text, href]) => `[${text}](${href})`).join(" · "));
+    return parts.join("\n\n");
   });
-  return ["| | Project | What it is | Status | Headline result |", "|---|---|---|---|---|", ...rows].join("\n");
+  const upcoming = projects.filter((p) => !isActive(p));
+  if (upcoming.length) {
+    const names = upcoming.map((p) => `**${p.title}**, ${p.tagline.replace(/^\w/, (c) => c.toLowerCase()).replace(/\.$/, "")}`);
+    blocks.push(`Up next: ${names.join("; ")}.`);
+  }
+  return blocks.join("\n\n");
 }
 
 export function setSection(text, name, body) {
@@ -199,33 +243,34 @@ export function skillLabels(html) {
   return labels;
 }
 
-// The "now building" line in About: the project in progress, or else the next one.
+// The "right now" line in About: the project in progress, or else the next one.
 function nowLine(projects) {
   const p = projects.find((x) => x.status === "progress") || projects.find((x) => x.status === "next");
   if (!p) return "";
-  const lead = p.status === "progress" ? "Now building, in public" : "Up next, in public";
-  return `          <p class="now" data-now data-repo="${esc(p.repo)}">${lead}: <a href="#${p.id}">${esc(p.title)}</a>. <span class="now__commit" data-now-commit></span></p>`;
+  const lead = p.status === "progress" ? "Right now I'm building" : "Next I'm building";
+  return `          <p class="now" data-now data-repo="${esc(p.repo)}">${lead} <a href="#${p.id}">${esc(p.title)}</a>. <span class="now__commit" data-now-commit></span></p>`;
 }
 
 export function renderSite(html, projects, owner, today, warn = () => {}) {
   const labels = skillLabels(html);
-  let next = setSection(html, "board", projects.map((p) => projectEntry(p, owner, labels, warn)).join("\n"));
+  let next = setSection(html, "board", projects.map((p) => projectEntry(p, labels, warn)).join("\n"));
   if (next.includes("<!-- sync:now:start -->")) next = setSection(next, "now", nowLine(projects));
   return stamp(html, next, today);
 }
 
 export function renderReadme(md, projects, today) {
-  return stamp(md, setSection(md, "projects", readmeTable(projects)), today);
+  return stamp(md, setSection(md, "projects", readmeProjects(projects)), today);
 }
 
 function report(projects, warnings) {
   const lines = projects.map((p) => {
     const bits = [statusLabel(p), p.live.public ? "public" : "not public yet"];
-    if (p.live.headline) bits.push(`headline: ${p.live.headline}`);
+    if (p.live.result) bits.push(`result: ${p.live.result}`);
+    else if (p.live.headline) bits.push(`results row: ${p.live.headline}`);
     return `- ${p.id} ${p.title}: ${bits.join(", ")}`;
   });
   if (warnings.length) lines.push("", "Warnings:", ...warnings.map((w) => `- ${w}`));
-  return `Synced the project cards from each project's repo (status, release, demo and the headline row of evals/results/summary.md).\n\n${lines.join("\n")}\n`;
+  return `Synced the project entries from each project's repo (status, release, demo, case study and evals/results/summary.md).\n\n${lines.join("\n")}\n`;
 }
 
 async function rewrite(path, render) {

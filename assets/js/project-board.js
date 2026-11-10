@@ -1,12 +1,11 @@
-// Project board: fills each project card from its GitHub repo when the page loads.
-//   - repo link and last push: GitHub REST API (no token; 60 requests/hour per visitor)
-//   - demo: the card's data-demo, or else the repo's "homepage" field
+// Project board: small live refreshes between the daily syncs, when the page loads.
 //   - status: becomes "Shipped" once the latest release is v1.0.0 or later
-//   - headline eval: first data row of evals/results/summary.md (or the row named
-//     in data-eval-row), read from raw.githubusercontent.com
-// Everything is written with textContent, never innerHTML. If a request fails,
-// the card keeps the honest static text that is already in the HTML.
-import { headline, describe, isV1OrLater } from "./summary.js";
+//   - "Code" link: added once the repo is public
+//   - the "right now" line: the latest commit on the project being built
+// The words themselves (story, result) come only from the daily sync, so a number on the
+// page is always one the results file backs. Everything is written with textContent, never
+// innerHTML. If a request fails, the entry keeps the text already in the HTML.
+import { isV1OrLater } from "./summary.js";
 
 const OWNER = "Varun-Kambali";
 const CACHE_MS = 10 * 60 * 1000;
@@ -47,62 +46,33 @@ async function fetchCached(url, as) {
   return result;
 }
 
-function slot(card, name) {
-  return card.querySelector(`[data-slot="${name}"]`);
-}
-
-function setLink(el, href, text) {
-  const a = document.createElement("a");
-  a.href = href;
-  a.textContent = text;
-  el.replaceChildren(a);
-}
-
 function formatDate(iso) {
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "Unknown";
+  if (Number.isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
-
-
 
 async function fill(card) {
   const repo = card.dataset.repo;
   const meta = await fetchCached(`https://api.github.com/repos/${OWNER}/${repo}`, "json");
-  if (!meta.ok) return meta.missing ? "missing" : "error";
+  if (!meta.ok) return;
 
-  const info = meta.body;
-  setLink(slot(card, "repo"), info.html_url, `github.com/${OWNER}/${repo}`);
-  slot(card, "updated").textContent = formatDate(info.pushed_at);
-
-  const demo = card.dataset.demo || info.homepage;
-  if (demo && /^https:\/\//.test(demo)) setLink(slot(card, "demo"), demo, demo.replace(/^https:\/\//, "").replace(/\/$/, ""));
+  if (!card.querySelector(".entry__links")) {
+    const p = document.createElement("p");
+    p.className = "entry__links";
+    const a = document.createElement("a");
+    a.href = meta.body.html_url;
+    a.textContent = "Code";
+    p.append(a);
+    card.querySelector(".entry__skills")?.before(p);
+  }
 
   const release = await fetchCached(`https://api.github.com/repos/${OWNER}/${repo}/releases/latest`, "json");
-  if (release.ok && isV1OrLater(release.body.tag_name)) {
-    for (const pill of [card.querySelector("[data-pill]")]) {
-      if (!pill) continue;
-      pill.dataset.status = "shipped";
-      pill.textContent = `Shipped ${release.body.tag_name}`;
-    }
+  const pill = card.querySelector("[data-pill]");
+  if (pill && release.ok && isV1OrLater(release.body.tag_name)) {
+    pill.dataset.status = "shipped";
+    pill.textContent = `Shipped ${release.body.tag_name}`;
   }
-
-  const branch = info.default_branch || "main";
-  const path = "evals/results/summary.md";
-  const summary = await fetchCached(`https://raw.githubusercontent.com/${OWNER}/${repo}/${branch}/${path}`, "text");
-  if (summary.ok) {
-    const found = headline(summary.body, card.dataset.evalRow);
-    const value = card.querySelector("[data-slot-value]");
-    if (found && value && !slot(card, "eval").querySelector("a")) {
-      value.textContent = describe(found);
-      value.classList.add("is-live");
-      const source = document.createElement("a");
-      source.href = `https://github.com/${OWNER}/${repo}/blob/${branch}/${path}`;
-      source.textContent = "results file";
-      slot(card, "eval").append(" ", source);
-    }
-  }
-  return "ok";
 }
 
 function since(iso) {
@@ -127,10 +97,4 @@ async function fillNow() {
 
 if (window.fetch) fillNow().catch(() => {});
 
-if (cards.length && window.fetch) {
-  Promise.all(cards.map((card) => fill(card).catch(() => "error"))).then((results) => {
-    if (!results.includes("error")) return;
-    const note = document.querySelector("[data-board-note]");
-    if (note) note.textContent = "GitHub didn't answer just now, so some cards show their saved status. Reload to try again.";
-  });
-}
+if (window.fetch) for (const card of cards) fill(card).catch(() => {});

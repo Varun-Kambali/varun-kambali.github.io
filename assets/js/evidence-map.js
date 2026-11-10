@@ -70,7 +70,7 @@
       button.type = "button";
       button.dataset.skill = id;
       button.textContent = tag.textContent.trim();
-      button.setAttribute("aria-label", `Show all evidence for ${labels.get(id)}`);
+      button.setAttribute("aria-label", `Show where I used ${labels.get(id)}`);
       tag.textContent = "";
       tag.appendChild(button);
       button.addEventListener("click", () => {
@@ -112,9 +112,9 @@
     const lines = matches.filter((c) => c.dataset.kind === "line").length;
     const projects = matches.filter((c) => c.dataset.kind === "project").length;
     const parts = [];
-    if (lines) parts.push(plural(lines, "resume line", "resume lines"));
-    if (projects) parts.push(plural(projects, "project", "projects"));
-    return parts.join(" and ") || "no linked evidence";
+    if (lines) parts.push(plural(lines, "result at work", "results at work"));
+    if (projects) parts.push(plural(projects, "open-source project", "open-source projects"));
+    return parts.join(" and ") || "nothing linked yet";
   }
 
   function resetClasses() {
@@ -164,7 +164,7 @@
       for (const card of matches) for (const b of card.querySelectorAll(`.tags button[data-skill="${id}"]`)) b.classList.add("is-active");
       highlight(matches, null, true);
       text = `${labels.get(id)}: ${counts(matches)}.`;
-      if (listedIn.has(id)) text += ` Listed in my resume's skills (${listedIn.get(id)}); no single resume line names it.`;
+      if (listedIn.has(id)) text += " I use it across my work rather than in one place.";
     } else if (kind === "card") {
       const card = cards.find((c) => c.id === id);
       const ids = skillsByCard.get(card);
@@ -178,7 +178,7 @@
       const matches = cards.filter((c) => skillsByCard.get(c).some((s) => lens.skills.includes(s)));
       lens.button.setAttribute("aria-pressed", "true");
       highlight(matches, lens.skills, true);
-      text = `Hiring for ${lens.label}: ${counts(matches)} match.`;
+      text = `${lens.label}: ${counts(matches)}.`;
     } else if (kind === "role") {
       const role = roles.get(id);
       const matches = cards.filter((c) => role.section.contains(c));
