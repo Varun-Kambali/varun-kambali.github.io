@@ -5,21 +5,27 @@
       "id": "P1",
       "repo": "nutrition-mcp",
       "title": "Nutrition MCP server",
-      "status": "progress",
-      "tagline": "MCP tools that give AI assistants sourced, unit-correct nutrition data, measured with and without the tools.",
-      "summary": "Ask an assistant how much protein is in 2 rotis and a katori of dal and it guesses, often wrongly, and Indian foods are poorly covered by Western databases. This open-source MCP server gives any MCP-capable assistant or agent sourced, unit-correct nutrition data instead.",
-      "measures": "Calorie and protein error, with vs without the tools",
-      "skills": ["mcp", "ci-evals", "evalsets", "structured", "python", "cicd"]
+      "status": "shipped",
+      "tagline": "MCP server that returns sourced nutrition, glycemic load and micronutrient data for Indian dishes, in grams or household measures.",
+      "summary": "Any MCP client can ask it for the nutrition of an Indian dish or ingredient in grams or in household measures such as a katori or a roti, and every answer states its source and the portion it assumed.",
+      "story": "When I asked AI assistants how much protein is in 2 rotis and a katori of rajma, I got a confident number with no source and no portion. So I built an open-source MCP server that any agent can call for sourced nutrition on 41 Indian dishes and 66 ingredients, in grams or household measures. Dish values are computed in code from USDA and CoFID ingredient data and recipes I wrote, so the model never does the arithmetic.",
+      "result": "From memory, Gemini was off by 16.0% on calories. With the server's tools it used the computed totals on 26 of 26 questions. A CI gate checks 18 dishes against independent CoFID and USDA records, at 18.7% average calorie error.",
+      "measures": "Calorie, protein and carbohydrate error with and without the tools, and computed dish values against independent references",
+      "evalRow": "Calorie error against the dataset totals, MAPE (%)",
+      "skills": ["mcp", "ci-evals", "evalsets", "structured", "python", "cicd", "docker", "data-pipelines"]
     },
     {
       "id": "P2",
       "repo": "meal-planner-agents",
       "title": "Meal-planner multi-agent",
-      "status": "next",
-      "tagline": "LangGraph agents plan a week of meals within hard limits, checked in code, traced, and gated by evals in CI.",
-      "summary": "Planning a week of meals that hits calorie and protein targets, follows diet rules and allergies, and fits a budget takes hours, and LLM-only planners break those limits silently. LangGraph agents draft, verify (macros computed in code through P1 over MCP), critique and repair the plan, with Langfuse traces and evals that gate CI.",
-      "measures": "Hard-constraint pass rate, single call vs agent pipeline",
-      "skills": ["agents", "langgraph", "mcp", "ci-evals", "observability", "frontend", "fastapi", "litellm", "docker", "cicd"]
+      "status": "progress",
+      "tagline": "LangGraph agents write recipes for the meal plan you already follow, check every number in code through nutrition-mcp over MCP, and track meals against it.",
+      "summary": "You enter the rules of your meal plan once. The agents write a week of recipes, nutrition-mcp supplies every nutrition number, and plain Python checks each recipe and day against the plan.",
+      "story": "I follow a meal plan I wrote myself. Writing the rules was quick; finding recipes that hit each meal's numbers, fit my kitchen and don't repeat was the slow part. Here you enter your plan's rules once, LangGraph agents write a week of recipes, my nutrition MCP server supplies every number, and plain Python checks each recipe and day, sending failures back for repair. Then it tracks what you actually eat against the plan.",
+      "result": "479 of 553 recipes pass every check, against 46 of 553 when a single model call writes the whole week. Evals gate CI, and the Langfuse traces mask every string except ids.",
+      "measures": "Share of recipes passing every recipe check, single call vs the agent pipeline",
+      "evalRow": "Recipes passing every recipe check (share)",
+      "skills": ["agents", "langgraph", "mcp", "ci-evals", "evalsets", "structured", "observability", "fastapi", "litellm", "frontend", "python", "docker", "cicd"]
     },
     {
       "id": "P3",
@@ -27,7 +33,8 @@
       "title": "Household docs vault",
       "status": "planned",
       "tagline": "Private document AI that runs locally: field extraction, expiry reminders and cited answers, on a LoRA-fine-tuned open-weight model.",
-      "summary": "Bills, warranties and insurance policies end up scattered, renewals get missed, and people won’t upload these papers to a cloud LLM. This vault extracts fields, reminds before expiry dates and answers questions with citations, running locally on a small open-weight model fine-tuned with LoRA.",
+      "summary": "Bills, warranties and insurance policies end up scattered, renewals get missed, and people won't upload these papers to a cloud LLM.",
+      "story": "Next on my list. Bills, warranties and insurance policies end up scattered, renewals get missed, and people won't upload these papers to a cloud LLM. I'm planning a vault that pulls out the key fields, reminds you before things expire and answers questions with citations, running locally on a small open-weight model I'll fine-tune with LoRA.",
       "measures": "Field-level F1, fine-tuned model vs Gemini Flash",
       "skills": ["finetune", "openweight", "rag", "citations", "structured", "fastapi", "docker", "frontend"]
     }

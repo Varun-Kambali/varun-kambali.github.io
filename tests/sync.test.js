@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { collect, offlineFetcher, renderSite, renderReadme, stamp, setSection, liveFetcher } from "../scripts/sync.mjs";
+import { collect, offlineFetcher, renderSite, renderReadme, stamp, setSection, liveFetcher, unbackedNumbers } from "../scripts/sync.mjs";
 
 const config = JSON.parse(await readFile(new URL("../data/projects.json", import.meta.url), "utf8"));
 const site = await readFile(new URL("../index.html", import.meta.url), "utf8");
 
-const SUMMARY = "| Metric | Baseline | This project | How measured |\n|---|---|---|---|\n| Calorie MAPE | 31.2% | 6.4% | make eval |\n";
+const SUMMARY = "| Metric | Baseline | This project | How measured |\n|---|---|---|---|\n| Other row | 1 | 2 | make eval |\n| Calorie error against the dataset totals, MAPE (%) | 31.2% | 6.4% | make eval |\n";
 const repo = (name, extra = {}) => ({
   name,
   private: false,
@@ -26,7 +26,8 @@ test("nothing public: every project stays 'not public yet'", async () => {
   assert.deepEqual(projects.map((p) => [p.id, p.live.public]), [["P1", false], ["P2", false], ["P3", false]]);
 });
 
-test("a public repo gets its link, demo, headline eval and Shipped status from a v1 release", async () => {
+test("a public repo gets its links, demo and Shipped status from a v1 release", async () => {
+  const warnings = [];
   const projects = await collect(
     config,
     fixture({
@@ -34,15 +35,40 @@ test("a public repo gets its link, demo, headline eval and Shipped status from a
       api: { "/repos/Varun-Kambali/nutrition-mcp/releases/latest": { tag_name: "v1.0.0" } },
       raw: { "nutrition-mcp/main/evals/results/summary.md": SUMMARY },
     }),
+    (w) => warnings.push(w),
   );
   const p1 = projects[0];
   assert.equal(p1.status, "shipped");
-  assert.equal(p1.live.headline, "Calorie MAPE: 31.2% → 6.4%");
+  assert.equal(p1.live.headline, "Calorie error against the dataset totals, MAPE (%): 31.2% → 6.4%", "the row named in evalRow, not the first");
   assert.equal(p1.live.demo, "https://example.org/demo");
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
   assert.match(html, /<p class="entry__status" data-pill data-status="shipped">Shipped v1\.0\.0<\/p>/);
-  assert.match(html, /Calorie MAPE: 31\.2% → 6\.4%<\/span> <a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md">results file<\/a>/);
+  assert.match(html, /<p class="entry__links"><a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp">Code<\/a> · <a href="https:\/\/example\.org\/demo">Live demo<\/a> · <a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md">Eval results<\/a><\/p>/);
   assert.match(html, /<!-- sync:stamp:start -->1 Nov 2026<!-- sync:stamp:end -->/);
+  assert.doesNotMatch(html, /id-chip/, "no resume line IDs on project entries");
+});
+
+test("the hand-written result shows only while the results file backs every number in it", async () => {
+  const summary = "| Measure | Baseline | This project |\n|---|---|---|\n| Calorie error against the dataset totals, MAPE (%) | 16.0 | 0.0 |\n| Questions | 26 / 26 | 26 / 26 |\n| Dishes | 18 | 18.7 |\n";
+  const backed = await collect(config, fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/evals/results/summary.md": summary } }));
+  assert.equal(backed[0].live.result, config.projects[0].result);
+  assert.match(renderSite(site, backed, "Varun-Kambali", "2026-11-01"), /<p class="entry__result">From memory, Gemini was off by 16\.0% on calories\./);
+
+  const warnings = [];
+  const rerun = summary.replace("| 16.0 |", "| 14.2 |");
+  const stale = await collect(config, fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/evals/results/summary.md": rerun } }), (w) => warnings.push(w));
+  assert.equal(stale[0].live.result, undefined);
+  assert.ok(warnings.some((w) => w.startsWith("P1: result names 16.0")), warnings.join("; "));
+  const html = renderSite(site, stale, "Varun-Kambali", "2026-11-01");
+  assert.match(html, /<p class="entry__result">Latest eval: Calorie error against the dataset totals, MAPE \(%\): 14\.2 → 0\.0\.<\/p>/, "falls back to the results row");
+  assert.doesNotMatch(html, /off by 16\.0%/);
+});
+
+test("numbers are matched whole, so 26 is not found inside 2026", () => {
+  assert.deepEqual(unbackedNumbers("26 of 26 questions", "run on 2026-10-21"), ["26"]);
+  assert.deepEqual(unbackedNumbers("479 of 553, 86.6%", "| 86.6% (479 of 553) |"), []);
+  assert.deepEqual(unbackedNumbers("16.0% error", "| 16.05 |"), ["16.0"]);
+  assert.deepEqual(unbackedNumbers("1,000 pages", "1,000"), []);
 });
 
 test("portfolio.json in the project repo overrides the site's text", async () => {
@@ -68,7 +94,7 @@ test("a new repo tagged 'portfolio' with a manifest joins the board", async () =
 });
 
 test("text from manifests is escaped", async () => {
-  const manifest = JSON.stringify({ summary: '<img src=x onerror="alert(1)">' });
+  const manifest = JSON.stringify({ story: '<img src=x onerror="alert(1)">' });
   const projects = await collect(config, fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/portfolio.json": manifest } }));
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
   assert.match(html, /&lt;img src=x onerror=&quot;alert\(1\)&quot;&gt;/);
@@ -86,14 +112,16 @@ test("stamp moves only when content changes", () => {
   assert.equal(stamp(before, before.replace("a ", "b "), "2026-10-20"), "b <!-- sync:stamp:start -->20 Oct 2026<!-- sync:stamp:end -->");
 });
 
-test("the README table follows the projects", async () => {
-  const md = "x\n<!-- sync:projects:start -->\nold\n<!-- sync:projects:end -->\n<sub>Last change: <!-- sync:stamp:start -->1 Oct 2026<!-- sync:stamp:end --></sub>\n";
+test("the README lists shipped and active projects in first person, then what's next", async () => {
+  const md = "x\n<!-- sync:projects:start -->\nold\n<!-- sync:projects:end -->\n<sub>Updated <!-- sync:stamp:start -->1 Oct 2026<!-- sync:stamp:end --></sub>\n";
   const projects = await collect(config, fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/evals/results/summary.md": SUMMARY } }));
   const out = renderReadme(md, projects, "2026-11-02");
-  assert.match(out, /\| P1 \| \*\*\[Nutrition MCP server\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\)\*\* \|/);
-  assert.match(out, /\[Calorie MAPE: 31\.2% → 6\.4%\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md\)/);
-  assert.match(out, /\| P2 \| \*\*Meal-planner multi-agent\*\* \|.* Next \| Not run yet \|/);
-  assert.doesNotMatch(out, /\p{Extended_Pictographic}/u, "no emoji in the README table");
+  assert.match(out, /### \[Nutrition MCP server\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\) · shipped\n\nWhen I asked AI assistants/);
+  assert.match(out, /Latest eval: Calorie error against the dataset totals, MAPE \(%\): 31\.2% → 6\.4%\.\n\n\[Eval results\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/evals\/results\/summary\.md\)/);
+  assert.match(out, /### Meal-planner multi-agent · in progress\n\nI follow a meal plan/, "a project that isn't public yet has no link");
+  assert.match(out, /Up next: \*\*Household docs vault\*\*, private document AI that runs locally/);
+  assert.doesNotMatch(out, /\| P\d \|/, "no table of IDs");
+  assert.doesNotMatch(out, /\p{Extended_Pictographic}/u, "no emoji in the README");
   assert.match(out, /2 Nov 2026/);
 });
 
@@ -111,18 +139,15 @@ test("an API failure stops the run instead of blanking the cards", async () => {
   }
 });
 
-test("the now-building strip follows the project in progress, then the next one", async () => {
+test("the right-now line follows the project in progress, then the next one", async () => {
   const inProgress = renderSite(site, await collect(config, fixture()), "Varun-Kambali", "2026-11-01");
-  assert.match(inProgress, /<p class="now" data-now data-repo="nutrition-mcp">Now building, in public: <a href="#P1">Nutrition MCP server<\/a>\./);
-  const shipped = await collect(
-    config,
-    fixture({ repos: [repo("nutrition-mcp")], api: { "/repos/Varun-Kambali/nutrition-mcp/releases/latest": { tag_name: "v1.0.0" } } }),
-  );
-  const html = renderSite(site, shipped, "Varun-Kambali", "2026-11-01");
-  assert.match(html, /<p class="now" data-now data-repo="meal-planner-agents">Up next, in public: <a href="#P2">Meal-planner multi-agent<\/a>\./);
+  assert.match(inProgress, /<p class="now" data-now data-repo="meal-planner-agents">Right now I'm building <a href="#P2">Meal-planner multi-agent<\/a>\./);
+  const later = { ...config, projects: config.projects.map((p) => ({ ...p, status: { P1: "shipped", P2: "shipped", P3: "next" }[p.id] })) };
+  const html = renderSite(site, await collect(later, fixture()), "Varun-Kambali", "2026-11-01");
+  assert.match(html, /<p class="now" data-now data-repo="household-docs-vault">Next I'm building <a href="#P3">Household docs vault<\/a>\./);
 });
 
-test("a case study in the repo is linked from the site entry and the README table", async () => {
+test("a case study in the repo is linked from the site entry and the README", async () => {
   const projects = await collect(
     config,
     fixture({ repos: [repo("nutrition-mcp")], raw: { "nutrition-mcp/main/docs/case-study.md": "# Case study: Nutrition MCP server" } }),
@@ -130,8 +155,9 @@ test("a case study in the repo is linked from the site entry and the README tabl
   const url = "https://github.com/Varun-Kambali/nutrition-mcp/blob/main/docs/case-study.md";
   assert.equal(projects[0].live.caseStudy, url);
   const html = renderSite(site, projects, "Varun-Kambali", "2026-11-01");
-  assert.match(html, /<dt>Case study<\/dt><dd data-slot="case"><a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md">Why I built it, and how<\/a><\/dd>/);
-  assert.match(html, /<dt>Case study<\/dt><dd data-slot="case">Not written yet<\/dd>/, "projects without one say so");
+  assert.match(html, /<a href="https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md">Why I built it<\/a>/);
+  const p3 = html.slice(html.indexOf('id="P3"'));
+  assert.doesNotMatch(p3.slice(0, p3.indexOf("</article>")), /entry__links/, "a project that isn't public has no links yet");
   const md = "<!-- sync:projects:start -->\nold\n<!-- sync:projects:end -->\n<!-- sync:stamp:start -->1 Oct 2026<!-- sync:stamp:end -->\n";
-  assert.match(renderReadme(md, projects, "2026-11-01"), /\*\*\[Nutrition MCP server\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\)\*\* · \[case study\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md\)/);
+  assert.match(renderReadme(md, projects, "2026-11-01"), /\[Why I built it\]\(https:\/\/github\.com\/Varun-Kambali\/nutrition-mcp\/blob\/main\/docs\/case-study\.md\)/);
 });
