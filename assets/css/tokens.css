@@ -4,7 +4,9 @@
   color-scheme: light;
 
   --color-bg: #FBFBFA;
-  --color-surface: #FFFFFF;
+  /* Same warm lean as the page and surface-2 (less blue than red and green), so every
+     light neutral reads as one paper; pure white would look cold beside them */
+  --color-surface: #FDFDFC;
   --color-surface-2: #F2F2F0;
   --color-text: #18181B;
   --color-text-muted: #52525B;
@@ -35,6 +37,9 @@
   --space-xl: 2rem;
   --space-2xl: 3rem;
   --space-3xl: 4rem;
+
+  /* Smallest hit area for any control: 44px, the touch-target size Apple and WCAG 2.5.5 use */
+  --target-min: 2.75rem;
 
   --radius-sm: 4px;
   --radius-md: 8px;

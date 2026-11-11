@@ -32,12 +32,21 @@
   let state = null; // { kind: "skill" | "card" | "lens" | "role", id }
   let drawn = false;
 
+  // The button is the full 44px target; the label inside it carries the underline and the
+  // highlighter marks, so they still sit on the words rather than filling the whole target.
+  function label(...nodes) {
+    const span = document.createElement("span");
+    span.className = "label";
+    span.append(...nodes);
+    return span;
+  }
+
   function toggleButton(item, className) {
     const button = document.createElement("button");
     button.type = "button";
     if (className) button.className = className;
     button.setAttribute("aria-pressed", "false");
-    button.append(...item.childNodes);
+    button.append(label(...item.childNodes));
     item.appendChild(button);
     return button;
   }
@@ -69,7 +78,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.dataset.skill = id;
-      button.textContent = tag.textContent.trim();
+      button.append(label(tag.textContent.trim()));
       button.setAttribute("aria-label", `Show where I used ${labels.get(id)}`);
       tag.textContent = "";
       tag.appendChild(button);
