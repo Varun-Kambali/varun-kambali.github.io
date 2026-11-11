@@ -26,7 +26,7 @@ What the portfolios people admire have in common, and what this follows:
 | Role | Token | Light | Dark | Use |
 |---|---|---|---|---|
 | Page | `--color-bg` | `#FBFBFA` | `#111113` | Background: a neutral off-white, not cream |
-| Surface | `--color-surface` | `#FFFFFF` | `#18181B` | The fixed status bar on phones |
+| Surface | `--color-surface` | `#FDFDFC` | `#18181B` | The fixed status bar on phones. Tinted the page's warm way, not pure white |
 | Surface 2 | `--color-surface-2` | `#F2F2F0` | `#202024` | Hover and selected entry background |
 | Text | `--color-text` | `#18181B` | `#F4F4F5` | Body, titles |
 | Muted text | `--color-text-muted` | `#52525B` | `#A1A1AA` | Descriptions, dates, meta (7.5:1 / 7.4:1) |
@@ -42,7 +42,7 @@ All pairs pass WCAG 2.2 AA, checked on 2026-10-18. Rule: muted text never sits o
 ## Typography
 
 - **IBM Plex Sans** 400, 500, 600 (and 400 italic) for everything readable. **IBM Plex Mono** only for dates and resume IDs (E1, K2, P1). Numbers inside sentences stay in the sans, weight 500.
-- Sizes: name 32px/600, role line 18px/500, body 16px/1.65, meta and lists 14px, tags and dates 12px. No display font, no italic serif headline, no all-caps labels above headings.
+- Sizes: name 32px/600, section heads 22px/600, role and project titles 18px/600, entry titles 16px/600, role line 18px/500, body 16px/1.65, meta and lists 14px, tags and dates 12px. Headings wrap with `text-wrap: balance`. No display font, no italic serif headline, no all-caps labels above headings.
 
 ## Layout
 
@@ -58,7 +58,9 @@ All pairs pass WCAG 2.2 AA, checked on 2026-10-18. Rule: muted text never sits o
 - **Dim** (not matching): titles turn muted; descriptions are already muted, and they brighten when an entry matches.
 
 ### Text buttons (lenses, skills, tags, entry and role titles)
-Plain text with a dotted underline, solid on hover. No borders, no pills. Touch screens get 44px targets through padding.
+Plain text with a dotted underline, solid on hover. No borders, no pills. Every control is at least 44px tall (`--target-min`) on every screen: the button is the target and its words sit in an inner `.label`, which carries the underline and the highlighter marks so they stay on the text. The bordered Copy link and Clear keep a 32px box with an invisible 44px layer. Pressed (`:active`): a `--color-border` fill under the label, one step past the hover grey. Disabled: muted, faint edge, no hover or press response.
+
+Long labels break on purpose: a role title's company drops to its own line below a 31rem column, and a skill's bracketed qualifier drops under its name below a 20rem panel (container queries).
 
 ### Entry
 A resume line or a project: ID (mono, muted) and title (600), the description (muted), an optional "How it works" disclosure, and its skills as a run of small text buttons. Hover and selection add a `--color-surface-2` background with an 8px radius; nothing else.
@@ -81,7 +83,7 @@ Only what explains an action: background and colour changes at 150ms, connectors
 
 ## Accessibility
 
-Landmarks, a skip link, full keyboard use (Tab, Enter or Space, Escape clears), `aria-pressed` on every toggle, an `aria-live` status, visible ink focus rings, and the page fully readable without JavaScript. Checked with axe on 8 states: no violations, nothing left for review.
+Landmarks, a skip link, full keyboard use (Tab, Enter or Space, Escape clears), `aria-pressed` on every toggle, an `aria-live` status, visible ink focus rings around the whole control, 44px targets, `overflow-x: clip` on `html` and `body`, and the page fully readable without JavaScript. Reasons for each choice: `docs/design-rationale.md`. Checked with axe on 8 states: no violations, nothing left for review.
 
 ## Avoid (these read as machine-made)
 
